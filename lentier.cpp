@@ -3,7 +3,7 @@
 
 using namespace std;
 
-#include "InitFonctions.h"
+#include "lentier.h"
 
 
 void Affiche_lentier(lentier a) {

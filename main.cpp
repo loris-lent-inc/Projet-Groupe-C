@@ -1,8 +1,9 @@
+#include <math.h>
 #include<iostream>
 using namespace std;
 
 
-#include "InitFonctions.h"
+#include "lentier.h"
 
 int main()
 {
