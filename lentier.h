@@ -121,9 +121,10 @@ lentier exp_mod(lentier a, lentier x, lentier N);
 
 
 /*
-R: Convertit une chaine de caractères en un lentier.
-E: 1 chaîne de caractères nombre_dec.
-S: 1 lentier resultat de la conversion.
+R: Convertit un entier sous forme de chaine de 
+   caractères en un lentier en base r.
+E: 1 chaîne de caractères, nombre_dec.
+S: 1 lentier, resultat de la conversion.
 */
 lentier dec2lentier(char* nombre_dec);
 
