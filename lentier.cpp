@@ -113,7 +113,7 @@ lentier mul_mod(lentier a, lentier b, lentier N) {
 lentier add_lentier(lentier a, lentier b)
 {
     unsigned int c, i;
-    unsigned int long long r = pow(2, 32);
+    unsigned int long long r = 0x100000000;
     lentier s;
     c = 0;                                                                                  // retenue
     i = 0;
