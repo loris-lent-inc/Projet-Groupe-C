@@ -99,6 +99,14 @@ lentier add_lentier(lentier a, lentier b);
 
 
 /*
+    R: augmenter la taille d'un lentier et remplire ses nouvelles cases mémoires de 0.
+    E: le lentier à allonger et la taille jusqu'à laquelle il faut allonger
+    S: rien
+*/
+lentier Allonge_lentier(lentier x, unsigned int size);
+
+
+/*
 R: Compare deux lentier a et b et retourne leur ordre.
 E: 2 lentier a et b.
 S: 1 char (-1 si a < b, 0 si a = b, 1 si a > b).
@@ -161,25 +169,3 @@ unsigned int lentier_log2(lentier c);
   S: 1 pointeur vers un tableau de char
 */
 char* lentier2dec(lentier nombre_base_r);
-
-
-/*
-	R: augmenter la taille d'un lentier et remplire ses nouvelles cases mémoires de 0.
-	E: le lentier à allonger et la taille jusqu'à laquelle il faut allonger
-	S: rien
-*/
-lentier Allonge_lentier(lentier x, unsigned int size);
-
-/*
-	R: Soustraire deux lentiers 
-	E: deux lentiers a et b tels que a >= b
-	S: un lentier, le resultat de la soustraction
-*/
-lentier sub_lentier(lentier a, lentier b);
-
-/*
-	R: Comparer la taille de deux lentiers
-	E: les deux lentiers à comparer
-	S: un char, il est à 0 si les deux lentiers sont égaux, à 1 si  a > b, et à -1 si b > a
-*/
-char cmp_lentier(lentier a, lentier b);
