@@ -41,7 +41,7 @@ R: Une fois un test_vector établi (res et expec_res définis)
 E: 1 test_vector
 S: Aucune
 */
-void v_test(test_vector T);
+void v_test(test_vector &T);
 
 /*
 R: Une fois un test_vector testé, cette fonction 
@@ -49,7 +49,7 @@ R: Une fois un test_vector testé, cette fonction
 E: 1 test_vector
 S: Aucune
 */
-void delete_vector(test_vector T);
+void delete_vector(test_vector &T);
 
 /*
 R: Affiche un lentier sous forme brute, case par case,

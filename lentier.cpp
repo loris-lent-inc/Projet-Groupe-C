@@ -47,18 +47,18 @@ void lAdjust_realloc(lentier &a) {
 }
 
 
-void v_test(test_vector T) {
+void v_test(test_vector &T) {
     if (!cmp_lentier(T.expec_res, T.res)) {
-        cout << "Test sur " << T.function << "reussi !" << endl;
+        cout << "Test sur " << T.function << " reussi !" << endl;
     }
 
     else {
-        cout << "ECHEC - Test sur " << T.function << "échoué !" << endl;
+        cout << "ECHEC - Test sur " << T.function << " échoué !" << endl;
     }
 }
 
 
-void delete_vector(test_vector T) {
+void delete_vector(test_vector &T) {
     delete[] T.a.p;
     delete[] T.b.p;
     delete[] T.x.p;
