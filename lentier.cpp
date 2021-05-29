@@ -15,6 +15,38 @@ void Affiche_lentier(lentier a) {
 }
 
 
+void lAdjust(lentier& a) {
+    unsigned int i = a.size;
+
+    while (i) {
+        if (*&a.p[i - 1] == 0) {
+            i--;
+        }
+        else{
+            a.size = i;
+            i = 0;
+        }
+    }
+}
+
+
+void lAdjust_realloc(lentier& a) {
+    lAdjust(a);
+    
+    lentier new_a;
+    new_a.size = a.size;
+    new_a.p = new unsigned int[a.size];
+
+    for (unsigned int i = 0; i < a.size; i++) {
+        new_a.p[i] = a.p[i];
+    }
+
+    delete[] a.p;
+
+    a = new_a;
+}
+
+
 void v_test(test_vector T) {
     if (!cmp_lentier(T.expec_res, T.res)) {
         cout << "Test sur " << T.function << "reussi !" << endl;
