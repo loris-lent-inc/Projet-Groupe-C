@@ -21,7 +21,7 @@ void v_test(test_vector T) {
     }
 
     else {
-        cout << "ECHEC - Test sur " << T.function << "ÈchouÈ !" << endl;
+        cout << "ECHEC - Test sur " << T.function << "√©chou√© !" << endl;
     }
 }
 
@@ -41,7 +41,7 @@ lentier mult_classique(lentier a, lentier b) {
     unsigned int i, j, n, t, c;
     unsigned int long long temp;
     unsigned int long long r;
-    lentier w;                                                                              // w contiendra le rÈsultat
+    lentier w;                                                                              // w contiendra le r√©sultat
     n = a.size;
     t = b.size;
     w.p = new unsigned int[n + t];                                                          // w est de taille n*t
@@ -53,7 +53,7 @@ lentier mult_classique(lentier a, lentier b) {
     {
         w.p[i] = 0;
         i = i++;
-    }                                                                                       // w est initialisÈ ‡ 0
+    }                                                                                       // w est initialis√© √† 0
     i = 0;
     while (i <= n - 1)
     {
@@ -62,14 +62,14 @@ lentier mult_classique(lentier a, lentier b) {
         while (j <= t - 1)
         {
             temp = ((unsigned long long int)a.p[i]) * b.p[j] + w.p[i + j] + c;
-            w.p[i + j] = temp;                                                              // chaque case de w est incrÈmentÈe par a*b et par la retenue
-            c = temp >> 32;                                                                 // ce qui dÈpasse les 32 bits de la case (unsigned int) est mis en retenue pour la case supÈrieure
+            w.p[i + j] = temp;                                                              // chaque case de w est incr√©ment√©e par a*b et par la retenue
+            c = temp >> 32;                                                                 // ce qui d√©passe les 32 bits de la case (unsigned int) est mis en retenue pour la case sup√©rieure
             j++;
         }
         w.p[i + t] = c;
         i++;
     }
-    return w;                                                                               // renvoi du rÈsultat
+    return w;                                                                               // renvoi du r√©sultat
 }
 
 
@@ -91,10 +91,10 @@ lentier add_lentier(lentier a, lentier b)
     {
         while (i <= b.size - 1)
         {
-            if (i < a.size)                                                                         // tant que le bit de A de rang i n'est pas nul, on l'ajoute ‡ B et C
+            if (i < a.size)                                                                         // tant que le bit de A de rang i n'est pas nul, on l'ajoute √† B et C
             {
                 s.p[i] = (a.p[i] + b.p[i] + c) % r;
-                c = ((a.p[i] + b.p[i] + c) > r) ? c = 1 : c = 0;                                            // on vÈrifie si la retenue vaut 1 ou 0 et on actualise
+                c = ((a.p[i] + b.p[i] + c) > r) ? c = 1 : c = 0;                                            // on v√©rifie si la retenue vaut 1 ou 0 et on actualise
             }
             else                                                                            // si le bit de A de rang i est nul, on ajoute B seul
             {
@@ -105,7 +105,7 @@ lentier add_lentier(lentier a, lentier b)
         s.p[b.size] = c;
         s.size = b.size;
     }
-    else                                                                                    // mÍme chose avec A plus grand lentier ou de mÍme taille
+    else                                                                                    // m√™me chose avec A plus grand lentier ou de m√™me taille
     {
         while (i <= a.size - 1)
         {
@@ -123,7 +123,7 @@ lentier add_lentier(lentier a, lentier b)
         s.p[a.size] = c;
         s.size = a.size;
     }
-    return s;                                                                               // renvoi du rÈsultat
+    return s;                                                                               // renvoi du r√©sultat
 }
 
 
@@ -135,10 +135,10 @@ unsigned int lentier_log2(lentier c) {
 char* lentier2dec(lentier L) {
     unsigned int length, n;
     n = 1;                                                                                  // Puissance de 10 pour optimisation : 10^9
-    length = (lentier_log2(L) >> 2) / n;                                                    // La longueur en base 2, divisÈe par 2 est approx. longueur en base 10 divisÈ par n car on divise par 10^n, donc n fois moins que si on divisait par 10
+    length = (lentier_log2(L) >> 2) / n;                                                    // La longueur en base 2, divis√©e par 2 est approx. longueur en base 10 divis√© par n car on divise par 10^n, donc n fois moins que si on divisait par 10
 
-    quores res_div;                                                                         // On crÈe un type composÈ qui contiendra le quotient et le reste de la division
-    res_div.quotient = L;                                                                   // InitialisÈ avec lentier passÈ en paramËtre
+    quores res_div;                                                                         // On cr√©e un type compos√© qui contiendra le quotient et le reste de la division
+    res_div.quotient = L;                                                                   // Initialis√© avec lentier pass√© en param√®tre
 
     lentier l_10n;
     l_10n.size = 1;
@@ -148,25 +148,166 @@ char* lentier2dec(lentier L) {
     char* b10 = new char[length * n + 1];                                                   // pointeur vers tableau qui stockera chiffre par chiffre lentier converti en base 10 (ce qu'on retourne)
 
 
-    for (unsigned int i = length; i > 0; i--) {                                             // en faisant une division par 10^n, le reste aura n chiffres, donc on fait une sous-boucle avec des divisions sur des int (et pas sur des lentier => plus rapide) pour rÈcupÈrer ces n chiffres 1 par 1, puis on fait le quotient par 10^n et on recommence ‡ partir de ce quotient
+    for (unsigned int i = length; i > 0; i--) {                                             // en faisant une division par 10^n, le reste aura n chiffres, donc on fait une sous-boucle avec des divisions sur des int (et pas sur des lentier => plus rapide) pour r√©cup√©rer ces n chiffres 1 par 1, puis on fait le quotient par 10^n et on recommence √† partir de ce quotient
         res_div = div_eucl_QR(res_div.quotient, l_10n);                                                // on met quotient+reste par 10^n dans le type compo
 
         if ((res_div.quotient.size - 1) || res_div.quotient.p[0] || res_div.reste) {                // Tant que le reste ou le quotien sont non nuls (au moins un des deux), on continue la boucle :
             uint8_t j = n - 1;
             while (res_div.reste) {                                                                 // sous-boucle : reste dans [0 ; 10^n - 1] donc on le re partage en ses n chiffres [0 ; 9] :
-                b10[(i - 1) * n + j] = (res_div.reste % 10) + '0';                                          // on prend le reste par 10 pour le chiffre cherchÈ
+                b10[(i - 1) * n + j] = (res_div.reste % 10) + '0';                                          // on prend le reste par 10 pour le chiffre cherch√©
                 res_div.reste = res_div.reste / 10;                                                        // puis quotient par 10 pour passer au chiffre suivant ; le tout n fois pour les n chiffres
                 j--;
             }
 
         }
-        else {                                                                                      // si le reste et le quotien de la division nuls (aka dËs que tous les chiffres sont rÈcupÈrÈs) on quitte la boucle
+        else {                                                                                      // si le reste et le quotien de la division nuls (aka d√®s que tous les chiffres sont r√©cup√©r√©s) on quitte la boucle
             i = 0;
         }
     }
 
     delete[] res_div.quotient.p;
-    delete[] l_10n.p;                                                                       // on delete les pointeurs internes MAIS PAS b10, pointeur de retour, ‡ delete[] aprËs appel.
+    delete[] l_10n.p;                                                                       // on delete les pointeurs internes MAIS PAS b10, pointeur de retour, √† delete[] apr√®s appel.
 
     return b10;
+}
+
+
+lentier sub_lentier(lentier a, lentier b)
+
+{
+	//Lexique ====================
+	int c;
+	unsigned int i;
+	unsigned int n; //taille du plus grand entier soit a
+	char signe; //varible correspondant au signe de a-b
+	lentier s; //lentier retourn√© 
+
+
+	//Algorithme =================
+	c = 0;
+	i = 0;
+
+	unsigned int * pa = a.p; //pa correspond au pointeur de l'entier a
+	unsigned int * pb = b.p; //pb correspond au pointeur de l'entier b 
+	unsigned int * ps = nullptr; //ps correspond au pointeur de l'entier s
+
+	//Ajustement de la taille des entiers :
+	lAdjust(a);
+	lAdjust(b);
+	if (a.size > b.size) 
+	{
+		b = Allonge_lentier(b, a.size);
+	}
+	
+	n = a.size; //Avec la fonction d'ajustement les entiers a et b ont la m√™me taille  
+
+	ps = new unsigned int[n];
+
+
+	for (i = 0; i < n; i++)
+
+	{
+		(*(ps + i)) = ((*(pa + i)) - (*(b.p + i)) - c) & 0x0FFFFFFFF;;
+
+		if ((*(pa + i)) >= (*(b.p + i)))
+		{
+			
+			c = 0;
+
+		}
+		else
+		{
+
+			c = 1;
+
+		}
+	}
+	
+	s.size = n;
+	s.p = ps;
+
+	lAdjust(s); //on enl√®ve les 0 exc√©dentaires du r√©sultat
+
+	return s;
+}
+
+lentier Allonge_lentier(lentier x, unsigned int size)
+{
+	lentier z;
+	unsigned int i;
+	unsigned int* j = new unsigned int[size]();
+
+	for (i = 0; i < size; i++)
+	{
+		*(j + i) = 0;
+	};
+
+	for (i = 0; i < x.size; i++)
+	{
+		*(j + i) = *(x.p + i);
+	}
+
+	z.size = size;
+	z.p = j;
+
+	return(z);
+}
+
+char cmp_lentier(lentier a, lentier b)
+{
+
+	lAdjust_realloc(a);
+	lAdjust_realloc(b); //On enl√®ve les z√©ros aux bits de poid fort des lentiers 
+
+	char x;
+	unsigned int ta;
+	unsigned int tb;
+	ta = a.size;
+	tb = b.size; //as et bs correspondend aus tailles respectives de a et de b
+	unsigned int taille_decremente; //Variable discr√®te de la boucle qui "balayer" les lentier du mot de poid fort au mot de poid faible.
+	unsigned int * pa = a.p;
+	unsigned int * pb = b.p; //pa et pb correspondent au pointeurs respectifs de a et de b. Initialis√©s au d√©but de leurs espaces m√©moire.
+
+	if (ta > tb) //les z√©ros de poid fort √©tant enlev√©s, si un lentier est plus long que l'autre, il est aussi sup√©rieur
+	{
+		x = 1;
+	}
+
+	if (tb > ta) //les z√©ros de poid fort √©tant enlev√©s, si un lentier est plus petit que l'autre, il est aussi inf√©rieur
+	{
+		x = -1;
+	}
+
+	if (ta == tb) //les tailles des deux lentiers sont √©gales : il fzut mainntenant √©tudier les valeurs de leur mot 
+	{
+		int va;
+		int vb; // valeurs respectives des mots de a et de b que l'on √©tudie dans la boucle
+		taille_decremente = ta;
+
+		while (taille_decremente > 0)
+		{
+			va = *(pa + taille_decremente - 1); //valeur du mot de a √©tudi√©
+			vb = *(pb + taille_decremente - 1); //valeur du mot de b √©tudi√©
+
+			if (va > vb)
+			{
+				x = 1;
+				taille_decremente = 0; //M√©thode pour sortir de cette de boucle while : et retourner x
+			}
+
+			if (va < vb)
+			{
+				x = -1;
+				taille_decremente = 0; //M√©thode pour sortir de cette de boucle while : et retourner x
+			}
+
+			if (va == vb)
+			{
+				taille_decremente = taille_decremente - 1; //On doit √©tudier le mot d'apr√®s
+				x = 0;
+			}
+		}
+	}
+
+	return (x);
 }
