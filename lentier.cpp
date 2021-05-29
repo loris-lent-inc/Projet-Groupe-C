@@ -15,7 +15,7 @@ void Affiche_lentier(lentier a) {
 }
 
 
-void lAdjust(lentier& a) {
+void lAdjust(lentier &a) {
     unsigned int i = a.size;
 
     while (i) {
@@ -30,7 +30,7 @@ void lAdjust(lentier& a) {
 }
 
 
-void lAdjust_realloc(lentier& a) {
+void lAdjust_realloc(lentier &a) {
     lAdjust(a);
     
     lentier new_a;
