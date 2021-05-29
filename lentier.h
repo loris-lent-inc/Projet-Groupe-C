@@ -62,12 +62,12 @@ void Affiche_lentier(lentier a);
 
 /*
 */
-void lAdjust(lentier& a);
+void lAdjust(lentier &a);
 
 
 /*
 */
-void lAdjust_realloc(lentier& a);
+void lAdjust_realloc(lentier &a);
 
 
 /*
