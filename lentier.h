@@ -4,9 +4,11 @@ typedef struct {
 } lentier;
 
 /*
-test_vector est un types composé de plusieurs lentier, (a, b, N, et x) 
+test_vector est un types composÃ© de plusieurs lentier, (a, b, N, et x) 
 pour les entrees, res pour le resultat, et expec_res pour le resultat attendu.
-Pour écrire les résultats des tests, on peut mettre le nom de la fonction dans "function"
+Pour Ã©crire les rÃ©sultats des tests, on peut mettre le nom de la fonction dans "function"
+Dans le main, il faut crÃ©er un test_vector, assigner les operande et le rÃ©sultat attendu 
+Calculer le rÃ©sultat donnÃ© par la fonction puis comparer avec cmp_lentier.
 */
 typedef struct {
     char function[30];
@@ -21,10 +23,10 @@ typedef struct {
 } test_vector;
 
 /*
-quores est un type composé de d'un lentier et d'un unsigned int,
-utilisé par lentier2dec pour calculer le quotient et le reste
+quores est un type composÃ© de d'un lentier et d'un unsigned int,
+utilisÃ© par lentier2dec pour calculer le quotient et le reste
 d'une division en 1 seul appel de div_eucl_QR.
-Par définition, le reste sera dans [0 ; 1.000.000.000]
+Par dÃ©finition, le reste sera dans [0 ; 1.000.000.000]
 donc un lentier est inutilement grand pour le stocker
 */
 typedef struct {
@@ -34,15 +36,15 @@ typedef struct {
 
 
 /*
-R: Une fois un test_vector établi (res et expec_res définis) 
-   cette fonction affichera si le test est passé ou non.
+R: Une fois un test_vector Ã©tabli (res et expec_res dÃ©finis) 
+   cette fonction affichera si le test est passÃ© ou non.
 E: 1 test_vector
 S: Aucune
 */
 void v_test(test_vector T);
 
 /*
-R: Une fois un test_vector testé, cette fonction 
+R: Une fois un test_vector testÃ©, cette fonction 
    delete[] les pointeurs des lentiers du vecteur.
 E: 1 test_vector
 S: Aucune
@@ -51,8 +53,8 @@ void delete_vector(test_vector T);
 
 /*
 R: Affiche un lentier sous forme brute, case par case,
-   de la moins significative à la plus significative.
-E: 1 lentier a, qui sera affiché.
+   de la moins significative Ã  la plus significative.
+E: 1 lentier a, qui sera affichÃ©.
 S: Aucune
 */
 void Affiche_lentier(lentier a);
@@ -105,7 +107,7 @@ char cmp_lentier(lentier a, lentier b);
 
 
 /*
-R: Soustrait deux lentier a et b et retourne la différence.
+R: Soustrait deux lentier a et b et retourne la diffÃ©rence.
 E: 2 lentier a et b.
 S: 1 lentier resultat de a - b.
 */
@@ -122,8 +124,8 @@ lentier exp_mod(lentier a, lentier x, lentier N);
 
 /*
 R: Convertit un entier sous forme de chaine de 
-   caractères en un lentier en base r.
-E: 1 chaîne de caractères, nombre_dec.
+   caractÃ¨res en un lentier en base r.
+E: 1 chaÃ®ne de caractÃ¨res, nombre_dec.
 S: 1 lentier, resultat de la conversion.
 */
 lentier dec2lentier(char* nombre_dec);
@@ -138,7 +140,7 @@ lentier div_eucl(lentier a, lentier b);
 
 
 /*
-R: Divise les lentiers a par b et retourne le quotient et le reste dans un type composé.
+R: Divise les lentiers a par b et retourne le quotient et le reste dans un type composÃ©.
 E: 2 lentier a et b.
 S: 1 quores comprenant les resultats de (a / b) et (a % b).
 */
@@ -154,7 +156,7 @@ unsigned int lentier_log2(lentier c);
 
 
 /*
-  R: créer un pointeur vers un tableau de char représentant l'entrée en base 10
+  R: crÃ©er un pointeur vers un tableau de char reprÃ©sentant l'entrÃ©e en base 10
   E: 1 lentier
   S: 1 pointeur vers un tableau de char
 */
