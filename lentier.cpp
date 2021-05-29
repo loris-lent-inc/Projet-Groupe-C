@@ -84,7 +84,7 @@ lentier mult_classique(lentier a, lentier b) {
     while (i <= n + t - 1)
     {
         w.p[i] = 0;
-        i = i++;
+        i++;
     }                                                                                       // w est initialisé à 0
     i = 0;
     while (i <= n - 1)
