@@ -466,7 +466,7 @@ lentier div_eucl(lentier a, lentier b) {
 		}
 	}
 	if (lambda > 0) {
-		buffer1 = B2BRightShift(na, 0, lambda);
+		buffer1 = B2BRightShift(na, (int)lambda, 1);
 		delete[] na.p;
 		na = buffer1;
 	}
