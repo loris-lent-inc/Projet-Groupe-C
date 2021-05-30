@@ -99,19 +99,23 @@ lentier add_lentier(lentier a, lentier b);
 
 
 /*
-    R: augmenter la taille d'un lentier et remplire ses nouvelles cases mémoires de 0.
-    E: le lentier à allonger et la taille jusqu'à laquelle il faut allonger
-    S: rien
-*/
-lentier Allonge_lentier(lentier x, unsigned int size);
-
-
-/*
 R: Compare deux lentier a et b et retourne leur ordre.
 E: 2 lentier a et b.
 S: 1 char (-1 si a < b, 0 si a = b, 1 si a > b).
 */
 char cmp_lentier(lentier a, lentier b);
+
+
+lentier W2WLeftShift(lentier a, int amount);
+
+
+lentier B2BRightShift(lentier a, int amount, char modifySize);
+
+
+lentier B2BLeftShift(lentier a, int amount, char modifySize);
+
+
+lentier Allonge_lentier(lentier x, unsigned int size);
 
 
 /*

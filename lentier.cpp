@@ -159,6 +159,325 @@ lentier add_lentier(lentier a, lentier b)
 }
 
 
+char cmp_lentier(lentier a, lentier b) {
+    char r = 0;
+
+    if (a.size > b.size) {
+        for (unsigned int i = a.size; i > b.size; i--) {
+            if (a.p[i - 1] > 0) {
+                r = 1;
+            }
+        }
+    }
+    if (b.size > a.size) {
+        for (unsigned int i = b.size; i > a.size; i--) {
+            if (b.p[i - 1] > 0) {
+                r = -1;
+            }
+        }
+    }
+    for (unsigned int i = (a.size > b.size) ? b.size : a.size; i > 0; i--) {
+        if (a.p[i - 1] > b.p[i - 1]) {
+            return 1;
+        }
+        else if (a.p[i - 1] < b.p[i - 1]) {
+            r = -1;
+        }
+    }
+    return r;
+}
+
+
+lentier W2WLeftShift(lentier a, int amount) {
+    lentier result;
+    result.size = a.size + amount;
+    result.p = new unsigned int[result.size]();
+
+    unsigned int i;
+
+    for (i = 1; i <= a.size; i++) {
+        result.p[result.size - i] = a.p[a.size - i];
+    }
+    return result;
+}
+
+
+lentier B2BRightShift(lentier a, int amount, char modifySize) {
+    unsigned int buffer, i;
+    buffer = 0;
+
+    lentier result;
+    result.size = a.size;
+    result.p = new unsigned int[result.size];
+
+    for (i = a.size ; i > 0; i--) {
+        result.p[i - 1] = (a.p[i - 1] >> amount) + buffer;
+        buffer = a.p[i] << (32 - amount);
+    }
+    if (modifySize == 1) {
+        lAdjust_realloc(result);
+    }
+    return result;
+}
+
+
+lentier B2BLeftShift(lentier a, int amount, char modifySize) {
+    unsigned int buffer, i;
+    buffer = 0;
+
+    lentier result;
+    result.size = a.size + 1;
+    result.p = new unsigned int[result.size];
+
+    for (i = 0; i <= a.size - 1; i++) {
+        result.p[i] = (a.p[i] << amount) + buffer;
+        buffer = a.p[i] << (32 - amount);
+    }
+    if (modifySize == 1) {
+        result.p[a.size] = buffer;
+        lAdjust_realloc(result);
+    }
+    return result;
+}
+
+
+lentier Allonge_lentier(lentier x, unsigned int size) {
+    lentier z;
+    unsigned int i;
+    unsigned int* j = new unsigned int[size]();
+
+    for (i = 0; i < size; i++)
+    {
+        *(j + i) = 0;
+    };
+
+    for (i = 0; i < x.size; i++)
+    {
+        *(j + i) = *(x.p + i);
+    }
+
+    z.size = size;
+    z.p = j;
+
+    return(z);
+}
+
+
+lentier sub_lentier(lentier a, lentier b) {
+    //Lexique ====================
+    int c;
+    unsigned int i;
+    unsigned int n; //taille du plus grand entier soit a
+    char signe; //varible correspondant au signe de a-b
+    lentier s; //lentier retourné 
+
+
+    //Algorithme =================
+    c = 0;
+    i = 0;
+
+    unsigned int* pa = a.p; //pa correspond au pointeur de l'entier a
+    unsigned int* pb = b.p; //pb correspond au pointeur de l'entier b 
+    unsigned int* ps = nullptr; //ps correspond au pointeur de l'entier s
+
+    //Ajustement de la taille des entiers :
+    lAdjust(a);
+    lAdjust(b);
+    if (a.size > b.size)
+    {
+        b = Allonge_lentier(b, a.size);
+    }
+
+    n = a.size; //Avec la fonction d'ajustement les entiers a et b ont la même taille  
+
+    ps = new unsigned int[n];
+
+
+    for (i = 0; i < n; i++)
+
+    {
+        (*(ps + i)) = ((*(pa + i)) - (*(b.p + i)) - c) & 0x0FFFFFFFF;;
+
+        if ((*(pa + i)) >= (*(b.p + i)))
+        {
+
+            c = 0;
+
+        }
+        else
+        {
+
+            c = 1;
+
+        }
+    }
+
+    s.size = n;
+    s.p = ps;
+
+    lAdjust(s); //on enlève les 0 excédentaires du résultat
+
+    return s;
+}
+
+
+lentier div_eucl(lentier a, lentier b) {
+	// Variables locales
+	unsigned int i; // compteur
+	unsigned char lambda;
+	const unsigned long long int BASE = 0x100000000;
+	unsigned long long int templl;
+
+	lentier q, r, buffer1, buffer2, buffer3, buffer4, na, nb; //q = quotient, r = reste
+	q.size = a.size - b.size;
+	q.p = new unsigned int[q.size];
+	na.size = a.size;
+	na.p = new unsigned int[na.size];
+	for (i = 0; i < a.size; i++) {
+		*(na.p + i) = *(a.p + i);
+	}
+
+	//na.p = a.p;
+	nb.size = b.size;
+	nb.p = new unsigned int[nb.size];
+	for (i = 0; i < b.size; i++) {
+		nb.p[i] = b.p[i];
+	}
+
+	/*
+	Partie 1 :
+	Pas besoin de le faire, les bits de q ont été initialisé à 0 lors de sa déclaration avec les parenthèses 	après les [] (voir page 2 fascicule de projet)
+	*/
+	if (cmp_lentier(na, nb) == -1) {
+		//il est demandé que A et B aient le même nombre de mots mais il n'est pas dit que A doit être supérieur à B
+
+		/*
+		q.size = 1;
+		delete q.p[];
+		q.p = new unsigned int[1];
+		Non nécessaire, car nous retournons que le reste dans cette fonction
+		*/
+
+	}
+	else {//Algo donné
+	 //Optimisation lambda
+		lambda = 0;
+		while (nb.p[nb.size - 1] < BASE / 2) {
+
+			buffer1 = B2BLeftShift(na, 1, 1);
+			delete[] na.p;
+			na = buffer1;
+
+			buffer1 = B2BLeftShift(nb, 1, 0);
+			delete[] nb.p;
+			nb = buffer1;
+
+			++lambda;
+		}
+
+
+		// Partie 2 :
+		if (na.size > nb.size) {
+			// ici le Buffer1 correspond à B multiplié par la base à la puissance n-t (équivalent à a.size - b.size)
+			buffer1 = W2WLeftShift(nb, na.size - nb.size);
+		}
+		else {
+			buffer1 = nb;
+		}
+		while (cmp_lentier(na, buffer1) >= 0) {
+			q.p[na.size - nb.size] = q.p[na.size - nb.size] + 1;
+			buffer2 = sub_lentier(na, buffer1);
+			delete[] na.p;
+			na = buffer2;
+		}
+
+		// Partie 3 :
+		for (i = na.size - 1; i >= nb.size; --i) {
+			// 3.a)
+			if (na.p[i] == nb.p[nb.size - 1]) {
+				q.p[i - nb.size] = BASE - 1;
+			}
+			else {
+				templl = (((unsigned long long int)na.p[i]) << 32) + na.p[i - 1];
+				q.p[i - nb.size] = ((unsigned int)(templl / nb.p[nb.size - 1]));
+			}
+
+			// 3.b)
+			buffer1.p = new unsigned int[3];
+			buffer1.size = 3;
+			buffer1.p[2] = na.p[i];
+			buffer1.p[1] = na.p[i - 1];
+			buffer1.p[0] = na.p[i - 2];
+
+			buffer2.p = new unsigned int[2];
+			buffer2.size = 2;
+			buffer2.p[1] = nb.p[nb.size - 1];
+			buffer2.p[0] = nb.p[nb.size - 2];
+
+			buffer3.p = new unsigned int[1];
+			buffer2.size = 1;
+			buffer3.p[0] = q.p[i - nb.size];
+
+			buffer4 = mult_classique(buffer2, buffer3);
+
+			while (cmp_lentier(buffer4, buffer1) == 1) {
+				q.p[i - nb.size] = q.p[i - nb.size] - 1;
+				buffer3.p[0] = q.p[i - nb.size];
+
+				delete[] buffer4.p;
+				buffer4 = mult_classique(buffer2, buffer3);
+			}
+			delete[] buffer1.p;
+			delete[] buffer2.p;
+			delete[] buffer3.p;
+			delete[] buffer4.p;
+
+			// 3.c) et 3.d)
+			buffer1.p = new unsigned int[1];
+			buffer1.size = 1;
+			buffer1.p[0] = q.p[i - nb.size];
+			buffer2 = W2WLeftShift(buffer1, i - nb.size);
+			delete[] buffer1.p;
+			buffer1 = mult_classique(buffer2, nb);
+			delete[] buffer2.p;
+
+			if (cmp_lentier(na, buffer1) == -1) {
+				q.p[i - nb.size] = q.p[i - nb.size] - 1;
+
+				delete[] buffer1.p;
+				buffer1.p = new unsigned int[1];
+				buffer1.size = 1;
+				buffer1.p[0] = q.p[i - nb.size];
+				buffer2 = W2WLeftShift(buffer1, i - nb.size);
+				delete[] buffer1.p;
+				buffer1 = mult_classique(buffer2, nb);
+				delete[] buffer2.p;
+				buffer2 = sub_lentier(na, buffer1);
+				delete[] na.p;
+				delete[] buffer1.p;
+				na = buffer2;
+			}
+			else {
+				buffer2 = sub_lentier(na, buffer1);
+				delete[] na.p;
+				delete[] buffer1.p;
+				na = buffer2;
+			}
+		}
+	}
+	if (lambda > 0) {
+		buffer1 = B2BRightShift(na, 0, lambda);
+		delete[] na.p;
+		na = buffer1;
+	}
+	r = na;
+	delete[] nb.p;
+	delete[] q.p;																			// à enlever pour la fonction de Loris 																
+	lAdjust_realloc(r);																		// est ce qu'il faut mettre un & (voir page 10 fascicule)
+	return r;
+}
+
+
 unsigned int lentier_log2(lentier c) {
     return (unsigned int)((c.size - 1) * 32 + ceil(log2(c.p[c.size - 1])));
 }
@@ -201,145 +520,4 @@ char* lentier2dec(lentier L) {
     delete[] l_10n.p;                                                                       // on delete les pointeurs internes MAIS PAS b10, pointeur de retour, à delete[] après appel.
 
     return b10;
-}
-
-
-lentier sub_lentier(lentier a, lentier b)
-
-{
-	//Lexique ====================
-	int c;
-	unsigned int i;
-	unsigned int n; //taille du plus grand entier soit a
-	char signe; //varible correspondant au signe de a-b
-	lentier s; //lentier retourné 
-
-
-	//Algorithme =================
-	c = 0;
-	i = 0;
-
-	unsigned int * pa = a.p; //pa correspond au pointeur de l'entier a
-	unsigned int * pb = b.p; //pb correspond au pointeur de l'entier b 
-	unsigned int * ps = nullptr; //ps correspond au pointeur de l'entier s
-
-	//Ajustement de la taille des entiers :
-	lAdjust(a);
-	lAdjust(b);
-	if (a.size > b.size) 
-	{
-		b = Allonge_lentier(b, a.size);
-	}
-	
-	n = a.size; //Avec la fonction d'ajustement les entiers a et b ont la même taille  
-
-	ps = new unsigned int[n];
-
-
-	for (i = 0; i < n; i++)
-
-	{
-		(*(ps + i)) = ((*(pa + i)) - (*(b.p + i)) - c) & 0x0FFFFFFFF;;
-
-		if ((*(pa + i)) >= (*(b.p + i)))
-		{
-			
-			c = 0;
-
-		}
-		else
-		{
-
-			c = 1;
-
-		}
-	}
-	
-	s.size = n;
-	s.p = ps;
-
-	lAdjust(s); //on enlève les 0 excédentaires du résultat
-
-	return s;
-}
-
-lentier Allonge_lentier(lentier x, unsigned int size)
-{
-	lentier z;
-	unsigned int i;
-	unsigned int* j = new unsigned int[size]();
-
-	for (i = 0; i < size; i++)
-	{
-		*(j + i) = 0;
-	};
-
-	for (i = 0; i < x.size; i++)
-	{
-		*(j + i) = *(x.p + i);
-	}
-
-	z.size = size;
-	z.p = j;
-
-	return(z);
-}
-
-char cmp_lentier(lentier a, lentier b)
-{
-
-	lAdjust_realloc(a);
-	lAdjust_realloc(b); //On enlève les zéros aux bits de poid fort des lentiers 
-
-	char x;
-	unsigned int ta;
-	unsigned int tb;
-	ta = a.size;
-	tb = b.size; //as et bs correspondend aus tailles respectives de a et de b
-	unsigned int taille_decremente; //Variable discrète de la boucle qui "balayer" les lentier du mot de poid fort au mot de poid faible.
-	unsigned int * pa = a.p;
-	unsigned int * pb = b.p; //pa et pb correspondent au pointeurs respectifs de a et de b. Initialisés au début de leurs espaces mémoire.
-
-	if (ta > tb) //les zéros de poid fort étant enlevés, si un lentier est plus long que l'autre, il est aussi supérieur
-	{
-		x = 1;
-	}
-
-	if (tb > ta) //les zéros de poid fort étant enlevés, si un lentier est plus petit que l'autre, il est aussi inférieur
-	{
-		x = -1;
-	}
-
-	if (ta == tb) //les tailles des deux lentiers sont égales : il fzut mainntenant étudier les valeurs de leur mot 
-	{
-		int va;
-		int vb; // valeurs respectives des mots de a et de b que l'on étudie dans la boucle
-		taille_decremente = ta;
-
-		while (taille_decremente > 0)
-		{
-			va = *(pa + taille_decremente - 1); //valeur du mot de a étudié
-			vb = *(pb + taille_decremente - 1); //valeur du mot de b étudié
-
-			if (va > vb)
-			{
-				x = 1;
-				taille_decremente = 0; //Méthode pour sortir de cette de boucle while : et retourner x
-			}
-
-			if (va < vb)
-			{
-				x = -1;
-				taille_decremente = 0; //Méthode pour sortir de cette de boucle while : et retourner x
-			}
-
-			if (va == vb)
-			{
-				taille_decremente = taille_decremente - 1; //On doit étudier le mot d'après
-				x = 0;
-			}
-		}
-	}
-
-	return (x);
 }
