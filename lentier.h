@@ -106,12 +106,30 @@ S: 1 char (-1 si a < b, 0 si a = b, 1 si a > b).
 char cmp_lentier(lentier a, lentier b);
 
 
+/*
+R: décalage mot à mot à gauche de amount d'un lentier a, la taille augmente automatiquement
+E: 1 lentier a, int amount
+S: lentier
+  */
 lentier W2WLeftShift(lentier a, int amount);
 
 
+/*
+R: décalage bit à bit à droite de amount d'un lentier a , 
+si modifySize = 1, alors la taille du lentier va être adaptée à la taille pratique.
+E: 1 lentier a, int amount, char modifySize (1 ou 0, automatiquement à zero)
+S: lentier
+*/
 lentier B2BRightShift(lentier a, int amount, char modifySize);
 
 
+/*
+R: décalage bit à bit à gauche de amount d'un lentier a , 
+si modifySize = 1, alors la taille du lentier va être augmentée
+pour éviter la perte de donnée par débordement.
+E: 1 lentier a, int amount, char modifySize (1 ou 0, automatiquement à zero)
+S: lentier
+  */
 lentier B2BLeftShift(lentier a, int amount, char modifySize);
 
 
