@@ -159,33 +159,64 @@ lentier add_lentier(lentier a, lentier b)
 }
 
 
-char cmp_lentier(lentier a, lentier b) {
-    char r = 0;
+char cmp_lentier(lentier a, lentier b) 
+{
+ 	lAdjust_realloc(a);
+	lAdjust_realloc(b); //On enlève les zéros aux bits de poid fort des lentiers 
 
-    if (a.size > b.size) {
-        for (unsigned int i = a.size; i > b.size; i--) {
-            if (a.p[i - 1] > 0) {
-                r = 1;
-            }
-        }
-    }
-    if (b.size > a.size) {
-        for (unsigned int i = b.size; i > a.size; i--) {
-            if (b.p[i - 1] > 0) {
-                r = -1;
-            }
-        }
-    }
-    for (unsigned int i = (a.size > b.size) ? b.size : a.size; i > 0; i--) {
-        if (a.p[i - 1] > b.p[i - 1]) {
-            return 1;
-        }
-        else if (a.p[i - 1] < b.p[i - 1]) {
-            r = -1;
-        }
-    }
-    return r;
+	char x;
+	unsigned int ta;
+	unsigned int tb;
+	ta = a.size;
+	tb = b.size; //as et bs correspondend aus tailles respectives de a et de b
+	unsigned int taille_decremente; //Variable discrète de la boucle qui "balayer" les lentier du mot de poid fort au mot de poid faible.
+	unsigned int * pa = a.p;
+	unsigned int * pb = b.p; //pa et pb correspondent au pointeurs respectifs de a et de b. Initialisés au début de leurs espaces mémoire.
+
+	if (ta > tb) //les zéros de poid fort étant enlevés, si un lentier est plus long que l'autre, il est aussi supérieur
+	{
+		x = 1;
+	}
+
+	if (tb > ta) //les zéros de poid fort étant enlevés, si un lentier est plus petit que l'autre, il est aussi inférieur
+	{
+		x = -1;
+	}
+
+	if (ta == tb) //les tailles des deux lentiers sont égales : il fzut mainntenant étudier les valeurs de leur mot 
+	{
+		int va;
+		int vb; // valeurs respectives des mots de a et de b que l'on étudie dans la boucle
+		taille_decremente = ta;
+
+		while (taille_decremente > 0)
+		{
+			va = *(pa + taille_decremente - 1); //valeur du mot de a étudié
+			vb = *(pb + taille_decremente - 1); //valeur du mot de b étudié
+
+			if (va > vb)
+			{
+				x = 1;
+				taille_decremente = 0; //Méthode pour sortir de cette de boucle while : et retourner x
+			}
+
+			if (va < vb)
+			{
+				x = -1;
+				taille_decremente = 0; //Méthode pour sortir de cette de boucle while : et retourner x
+			}
+
+			if (va == vb)
+			{
+				taille_decremente = taille_decremente - 1; //On doit étudier le mot d'après
+				x = 0;
+			}
+		}
+	}
+
+	return (x);
 }
+
 
 
 lentier W2WLeftShift(lentier a, int amount) {
@@ -258,7 +289,7 @@ lentier Allonge_lentier(lentier x, unsigned int size) {
 
     z.size = size;
     z.p = j;
-
+    delete[x.size] x.p;
     return(z);
 }
 
