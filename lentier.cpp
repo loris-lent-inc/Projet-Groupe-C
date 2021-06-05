@@ -361,7 +361,7 @@ lentier div_eucl(lentier a, lentier b) {
 
 	lentier q, r, buffer1, buffer2, buffer3, buffer4, na, nb; //q = quotient, r = reste
 	q.size = a.size - b.size;
-	q.p = new unsigned int[q.size];
+	q.p = new unsigned int[q.size]();
 	na.size = a.size;
 	na.p = new unsigned int[na.size];
 	for (i = 0; i < a.size; i++) {
