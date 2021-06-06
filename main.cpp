@@ -9,23 +9,24 @@ int main()
 {
 	//Lexique {Principal}
 
-	char L0[50] = {'1', '2', '3'};
-	char L1[50] = {'4', '5', '6'};
-	char R0[50] = {'7', '8', '9'};
-
-	test_vector vect1 = {"add_lentier"};
+	lentier p;
 
 //Algorithme {Principal}
   //Debut
-	vect1.a = dec2lentier(L0);
-	vect1.b = dec2lentier(L1);
-	vect1.expec_res = dec2lentier(R0);
+	p.size = 3;
+	p.p = new unsigned int[p.size];
+	p.p[0] = 31975516993;
+	p.p[1] = 255446423;
+	p.p[2] = 66926;
 
-	vect1.res = add_lentier(vect1.a, vect1.b);
-	v_test(vect1);
+	char* dec[25] = { 0 };
+	*dec = lentier2dec(p);
+	for (int i = 0; i < 25; i++) {
+		cout << dec[i];
+	}
   //Fin	
 
-	delete_vector(vect1);
+	delete[] p.p, dec;
 
 	system("pause");
 	return 0;
