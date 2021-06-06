@@ -9,24 +9,24 @@ int main()
 {
 	//Lexique {Principal}
 
-	lentier p;
+	lentier Lent;
 
 //Algorithme {Principal}
   //Debut
-	p.size = 3;
-	p.p = new unsigned int[p.size];
-	p.p[0] = 31975516993;
-	p.p[1] = 255446423;
-	p.p[2] = 66926;
+	Lent.size = 3;
+	Lent.p = new unsigned int[3];
+	Lent.p[0] = 3197516993;
+	Lent.p[1] = 255446423;
+	Lent.p[2] = 66926;
 
 	char* dec[25] = { 0 };
-	*dec = lentier2dec(p);
+	*dec = lentier2dec(Lent);
 	for (int i = 0; i < 25; i++) {
 		cout << dec[i];
 	}
   //Fin	
 
-	delete[] p.p, dec;
+	delete[] Lent.p, dec;
 
 	system("pause");
 	return 0;

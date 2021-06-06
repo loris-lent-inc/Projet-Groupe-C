@@ -161,8 +161,8 @@ lentier add_lentier(lentier a, lentier b)
 
 char cmp_lentier(lentier a, lentier b) 
 {
- 	lAdjust_realloc(a);
-	lAdjust_realloc(b);                                                                     //On enlève les zéros aux bits de poid fort des lentiers 
+ 	//lAdjust_realloc(a);
+	//lAdjust_realloc(b);                                                                     //On enlève les zéros aux bits de poid fort des lentiers 
 
 	char x;
 	unsigned int taille_decremente;                                                         //Variable discrète de la boucle qui "balayer" les lentier du mot de poid fort au mot de poid faible.
@@ -500,7 +500,7 @@ lentier div_eucl(lentier a, lentier b) {
 quores div_eucl_QR(lentier a, lentier b) {
 	// Variables locales
 	unsigned int i; // compteur
-	unsigned char lambda;
+	unsigned char lambda = 0;
 	const unsigned long long int BASE = 0x100000000;
 	unsigned long long int templl;
 
@@ -508,7 +508,7 @@ quores div_eucl_QR(lentier a, lentier b) {
 
 	lentier q, r, buffer1, buffer2, buffer3, buffer4, na, nb; //q = quotient, r = reste
 	q.size = a.size - b.size;
-	q.p = new unsigned int[q.size];
+	q.p = new unsigned int[q.size]();
 	na.size = a.size;
 	na.p = new unsigned int[na.size];
 	for (i = 0; i < a.size; i++) {
@@ -589,9 +589,9 @@ quores div_eucl_QR(lentier a, lentier b) {
 
 			buffer2.p = new unsigned int[2];
 			buffer2.size = 2;
-			buffer2.p[1]  nb.p[nb.size - 2];
-= nb.p[nb.size - 1];
-			buffer2.p[0] =
+			buffer2.p[1] = nb.p[nb.size - 1];
+			buffer2.p[0] = nb.p[nb.size - 2];
+
 			buffer3.p = new unsigned int[1];
 			buffer3.size = 1;
 			buffer3.p[0] = q.p[i - nb.size];
@@ -667,7 +667,7 @@ unsigned int lentier_log2(lentier c) {
 
 
 char* lentier2dec(lentier L) {
-    unsigned int length, n;
+	unsigned int length, n;
     n = 1;                                                                                  // Puissance de 10 pour optimisation : 10^9
     length = (lentier_log2(L) >> 2) / n;                                                    // La longueur en base 2, divisée par 2 est approx. longueur en base 10 divisé par n car on divise par 10^n, donc n fois moins que si on divisait par 10
 
