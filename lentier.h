@@ -151,6 +151,13 @@ S: 1 lentier resultat de (a ^ x) % N.
 */
 lentier exp_mod(lentier a, lentier x, lentier N);
 
+/*
+R : Initialise un lentier de taille 1 avec valeur comprise en 0 et (2^32)-1
+E : Un entier
+S : Un lentier
+*/
+lentier init_lentier(unsigned int a);
+
 
 /*
 R: Convertit un entier sous forme de chaine de 
