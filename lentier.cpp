@@ -340,6 +340,63 @@ lentier sub_lentier(lentier a, lentier b) {
 }
 
 
+lentier init_lentier(unsigned int a) {
+	lentier n;
+
+	n.size = 1; //Le lentier ne contient qu'un seul digit
+	n.p = new unsigned int;
+	*(n.p) = a; //Le digit prend la valeur de l'entier passé en paramètre
+	return n;
+}
+
+
+lentier dec2lentier(char* nombre_dec) {
+	//Structures lentier nécessaires
+	lentier buffer1, buffer2, digit, dix;
+
+	//Nombre 10^n en base 10
+	unsigned int idigit;
+
+	//Taille de la chaine de caractères
+	unsigned int nb_digit = strlen(nombre_dec);
+
+	//Initialisation buffer1 = 0 et dix = 10 (en base 2^32)
+	buffer1 = init_lentier(0);
+	dix = init_lentier(10);
+
+
+	//L'algorithme qui suit reprend la méthode de Horner
+	//
+	for (unsigned int i = 0; i < nb_digit; i++) {
+		idigit = nombre_dec[i] - '0'; //Nombre d'incide i dans la chaine (Conversion forcé de type)
+
+		digit = init_lentier(idigit); //Convertion du digit (base 10)-->(base 2^32)
+
+		//Multiplication par 10 du buffer2
+		buffer2 = mult_classique(buffer1, dix);
+
+		delete[] buffer1.p;
+
+		buffer1 = buffer2; //Swap buffer1 et buffer2
+
+		//Ajout du au buffer2 du digit
+		buffer2 = add_lentier(buffer1, digit);
+
+		delete[] buffer1.p;
+		delete[] digit.p;
+
+		buffer1 = buffer2; //Swap buffer1 et buffer2
+
+		lAdjust_realloc(buffer1);
+	}
+
+	//Libération de la mémoire avant la fin de la fonction
+	delete[] dix.p;
+
+	return buffer1;
+}
+
+
 lentier div_eucl(lentier a, lentier b) {
 	// Variables locales
 	unsigned int i; // compteur
