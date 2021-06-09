@@ -558,9 +558,8 @@ quores div_eucl_QR(lentier a, lentier b) {
     unsigned int i;
     unsigned long long int temp = 0;
     quores res;
-    //lentier q, r;
 
-    res.quotient.size = a.size; //-b.size;
+    res.quotient.size = (a.size == 1) ? (1) : (a.size - 1);
     res.quotient.p = new unsigned int[res.quotient.size];
 
     for (i = a.size; i > 0; i--) {
@@ -569,9 +568,6 @@ quores div_eucl_QR(lentier a, lentier b) {
         temp = temp % b.p[0];
     }
     res.reste = (int)temp;
-    //res.quotient = q;
-    //res.reste = *(r.p);
-    //delete[] r.p;
 
     return res;
   }
@@ -603,16 +599,14 @@ char* lentier2dec(lentier L) {
         if ((res_div.quotient.size - 1) || res_div.quotient.p[0] || res_div.reste) {                    // Tant que le reste ou le quotien sont non nuls (au moins un des deux), on continue la boucle :
             uint8_t j = n;
             while (j) {                                                                                 // sous-boucle : reste dans [0 ; 10^n - 1] donc on le re partage en ses n chiffres [0 ; 9] :
-                k = (res_div.reste % 10) + '0';
-                x = (i - 1) * n + j;
-                b10[(i - 1) * n + j] = k;                                                                       // on prend le reste par 10 pour le chiffre cherché
+                b10[(i - 1) * n + j] = (res_div.reste % 10) + '0';                                                                       // on prend le reste par 10 pour le chiffre cherché
                 res_div.reste = res_div.reste / 10;                                                             // puis quotient par 10 pour passer au chiffre suivant ; le tout n fois pour les n chiffres
                 j--;
             }
 
         }
         else {                                                                                      // si le reste et le quotien de la division nuls (aka dès que tous les chiffres sont récupérés) on quitte la boucle
-            i = 0;
+            break;
         }
     }
 

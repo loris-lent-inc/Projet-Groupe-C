@@ -9,7 +9,7 @@ int main()
 {
 	//Lexique {Principal}
 
-	char * lent = (char *)"1234567891011121314151617";
+	char* lent = (char*)"1234567891011121314151617"; //18192021222324252627282930";
 
 	lentier Lent, dix;
 
@@ -28,7 +28,7 @@ int main()
 	char* dec = new char[50];
 	dec = lentier2dec(Lent);
 
-	for (int i = 0; i <25; i++) {
+	for (int i = 0; i < 25; i++) {
 		cout << dec[i];
 	}
 	cout << endl << endl;
