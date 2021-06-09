@@ -566,11 +566,13 @@ quores div_eucl_QR(lentier a, lentier b) {
     r.p = new unsigned int[1];
 
     
-    for (i = a.size - 1; i > 0; i--) {
-      temp = (temp << 32) + a.p[i];
-      q.p[i] = (int) (temp / b.p[0]);
+    for (i = a.size; i > 0; i--) {
+      temp = (temp << 32) + a.p[i - 1];
+      q.p[i - 1] = (int) (temp / b.p[0]);
+      //cout << q.p[i - 1] << i;
       temp = temp % b.p[0];
     }
+    //cout << q.p[0];
     r.p[0] = (int) temp;
     res.quotient = q ;
     res.reste = *(r.p) ;
@@ -586,9 +588,11 @@ unsigned int lentier_log2(lentier c) {
 
 
 char* lentier2dec(lentier L) {
-	unsigned int length, n;
-    n = 1;                                                                                  // Puissance de 10 pour optimisation : 10^9
-    length = (lentier_log2(L) >> 2) / n;                                                    // La longueur en base 2, divisée par 2 est approx. longueur en base 10 divisé par n car on divise par 10^n, donc n fois moins que si on divisait par 10
+	unsigned int length, n, x;
+    n = 9;                                                                                  // Puissance de 10 pour optimisation : 10^9
+    length = (lentier_log2(L) >> 1) / n;                                                    // La longueur en base 2, divisée par 2 est approx. longueur en base 10 divisé par n car on divise par 10^n, donc n fois moins que si on divisait par 10
+
+    char k, v;
 
     quores res_div;                                                                         // On crée un type composé qui contiendra le quotient et le reste de la division
     res_div.quotient = L;                                                                   // Initialisé avec lentier passé en paramètre
@@ -605,9 +609,11 @@ char* lentier2dec(lentier L) {
         res_div = div_eucl_QR(res_div.quotient, l_10n);                                                // on met quotient+reste par 10^n dans le type compo
 
         if ((res_div.quotient.size - 1) || res_div.quotient.p[0] || res_div.reste) {                // Tant que le reste ou le quotien sont non nuls (au moins un des deux), on continue la boucle :
-            uint8_t j = n - 1;
-            while (res_div.reste) {                                                                 // sous-boucle : reste dans [0 ; 10^n - 1] donc on le re partage en ses n chiffres [0 ; 9] :
-                b10[(i - 1) * n + j] = (res_div.reste % 10) + '0';                                          // on prend le reste par 10 pour le chiffre cherché
+            uint8_t j = n;
+            while (j) {                                                                 // sous-boucle : reste dans [0 ; 10^n - 1] donc on le re partage en ses n chiffres [0 ; 9] :
+                k = (res_div.reste % 10) + '0';
+                x = (i - 1) * n + j;
+                b10[(i - 1) * n + j] = k;                                          // on prend le reste par 10 pour le chiffre cherché
                 res_div.reste = res_div.reste / 10;                                                        // puis quotient par 10 pour passer au chiffre suivant ; le tout n fois pour les n chiffres
                 j--;
             }
