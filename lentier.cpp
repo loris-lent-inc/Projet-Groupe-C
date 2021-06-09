@@ -161,8 +161,8 @@ lentier add_lentier(lentier a, lentier b)
 
 char cmp_lentier(lentier a, lentier b) 
 {
- 	//lAdjust_realloc(a);
-	//lAdjust_realloc(b);                                                                     //On enlève les zéros aux bits de poid fort des lentiers 
+ 	lAdjust_realloc(a);
+	lAdjust_realloc(b);                                                                     //On enlève les zéros aux bits de poid fort des lentiers 
 
 	char x;
 	unsigned int taille_decremente;                                                         //Variable discrète de la boucle qui "balayer" les lentier du mot de poid fort au mot de poid faible.
@@ -557,26 +557,21 @@ lentier div_eucl(lentier a, lentier b) {
 quores div_eucl_QR(lentier a, lentier b) {
     unsigned int i;
     unsigned long long int temp = 0;
-    quores res ;
-    lentier q, r;
+    quores res;
+    //lentier q, r;
 
-    q.size = a.size;
-    q.p = new unsigned int[q.size];
-    r.size = 1;
-    r.p = new unsigned int[1];
+    res.quotient.size = a.size; //-b.size;
+    res.quotient.p = new unsigned int[res.quotient.size];
 
-    
     for (i = a.size; i > 0; i--) {
-      temp = (temp << 32) + a.p[i - 1];
-      q.p[i - 1] = (int) (temp / b.p[0]);
-      //cout << q.p[i - 1] << i;
-      temp = temp % b.p[0];
+        temp = (temp << 32) + a.p[i - 1];
+        res.quotient.p[i - 1] = (int)(temp / b.p[0]);
+        temp = temp % b.p[0];
     }
-    //cout << q.p[0];
-    r.p[0] = (int) temp;
-    res.quotient = q ;
-    res.reste = *(r.p) ;
-    delete [] r.p ;
+    res.reste = (int)temp;
+    //res.quotient = q;
+    //res.reste = *(r.p);
+    //delete[] r.p;
 
     return res;
   }
@@ -597,24 +592,21 @@ char* lentier2dec(lentier L) {
     quores res_div;                                                                         // On crée un type composé qui contiendra le quotient et le reste de la division
     res_div.quotient = L;                                                                   // Initialisé avec lentier passé en paramètre
 
-    lentier l_10n;
-    l_10n.size = 1;
-    l_10n.p = new unsigned int[1];
-    l_10n.p[0] = pow(10, n);                                                                // lentier contenant 10^n pour les divisions
-
+    lentier l_10n = init_lentier(pow(10, n));                                               // lentier contenant 10^n pour les divisions
+    
     char* b10 = new char[length * n + 1];                                                   // pointeur vers tableau qui stockera chiffre par chiffre lentier converti en base 10 (ce qu'on retourne)
 
 
     for (unsigned int i = length; i > 0; i--) {                                             // en faisant une division par 10^n, le reste aura n chiffres, donc on fait une sous-boucle avec des divisions sur des int (et pas sur des lentier => plus rapide) pour récupérer ces n chiffres 1 par 1, puis on fait le quotient par 10^n et on recommence à partir de ce quotient
-        res_div = div_eucl_QR(res_div.quotient, l_10n);                                                // on met quotient+reste par 10^n dans le type compo
+        res_div = div_eucl_QR(res_div.quotient, l_10n);                                                 // on met quotient+reste par 10^n dans le type compo
 
-        if ((res_div.quotient.size - 1) || res_div.quotient.p[0] || res_div.reste) {                // Tant que le reste ou le quotien sont non nuls (au moins un des deux), on continue la boucle :
+        if ((res_div.quotient.size - 1) || res_div.quotient.p[0] || res_div.reste) {                    // Tant que le reste ou le quotien sont non nuls (au moins un des deux), on continue la boucle :
             uint8_t j = n;
-            while (j) {                                                                 // sous-boucle : reste dans [0 ; 10^n - 1] donc on le re partage en ses n chiffres [0 ; 9] :
+            while (j) {                                                                                 // sous-boucle : reste dans [0 ; 10^n - 1] donc on le re partage en ses n chiffres [0 ; 9] :
                 k = (res_div.reste % 10) + '0';
                 x = (i - 1) * n + j;
-                b10[(i - 1) * n + j] = k;                                          // on prend le reste par 10 pour le chiffre cherché
-                res_div.reste = res_div.reste / 10;                                                        // puis quotient par 10 pour passer au chiffre suivant ; le tout n fois pour les n chiffres
+                b10[(i - 1) * n + j] = k;                                                                       // on prend le reste par 10 pour le chiffre cherché
+                res_div.reste = res_div.reste / 10;                                                             // puis quotient par 10 pour passer au chiffre suivant ; le tout n fois pour les n chiffres
                 j--;
             }
 
@@ -627,5 +619,35 @@ char* lentier2dec(lentier L) {
     delete[] res_div.quotient.p;
     delete[] l_10n.p;                                                                       // on delete les pointeurs internes MAIS PAS b10, pointeur de retour, à delete[] après appel.
 
+    b10 = Clean_after_your_dog(length * n, b10);
+
     return b10;
+}
+
+char* Clean_after_your_dog(unsigned int l, char *b)
+{
+    char k = b[0];
+    unsigned int i = 0;
+    while (k < 49 || k > 58) {                                                              // On parcours la chaine jusqu'au premier caractère valide non-nul
+        i++;
+        k = b[i];
+    }
+    char* d = new char[l - i];                                                              // on crée une nouvelle chaine de taille adéquate
+    
+    unsigned int start = i;                                                                 // On retiens l'indice du premier caractère valide
+    
+    l = l + i;                                                                              // En ajoutant i à l, on assure que la boucle parcourera précisément les caractères valides de la chaine
+    
+    for (i; i <= l; i++) {
+        if (b[i] > 47 && b[i] < 58) {
+            d[i - start] = b[i];                                                                    // Tant que les caractères sont des chiffres, on les ajoutes à la nouvelle chaine
+        }
+        else {
+            break;                                                                                  // Sinon on arrête la copie
+        }
+    }
+   
+    delete[] b;
+    b = d;                                                                                  // On remplace b par la nouvelle chaine
+    return b;
 }

@@ -185,16 +185,24 @@ quores div_eucl_QR(lentier a, lentier b);
 
 
 /*
-  R: clacule et renvoie la longueur en bits d'un lentier.
-  E: 1 lentier
-  S: 1 unsigned int, la taille du lentier
+R: clacule et renvoie la longueur en bits d'un lentier.
+E: 1 lentier
+S: 1 unsigned int, la taille du lentier
 */
 unsigned int lentier_log2(lentier c);
 
 
 /*
-  R: créer un pointeur vers un tableau de char représentant l'entrée en base 10
-  E: 1 lentier
-  S: 1 pointeur vers un tableau de char
+R: créer un pointeur vers un tableau de char représentant l'entrée en base 10
+E: 1 lentier
+S: 1 pointeur vers un tableau de char
 */
 char* lentier2dec(lentier nombre_base_r);
+
+
+/*
+R : Supprime les valeurs inutiles dans une chaine de caractère
+E : 1 unsigned int, dernière valeur utile de la chaine
+S : Chaine de caractères nettoyée
+*/
+char* Clean_after_your_dog(unsigned int l, char *b);
