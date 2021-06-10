@@ -573,8 +573,8 @@ quores div_eucl_QR(lentier a, lentier b) {
   }
 
 
-unsigned int lentier_log2(lentier c) {
-    return (unsigned int)((c.size - 1) * 32 + ceil(log2(c.p[c.size - 1])));
+unsigned long long int lentier_log2(lentier a) {
+    return (unsigned long long int)((a.size - 1) * 32 + ceil(log2(a.p[a.size - 1])));
 }
 
 
@@ -621,8 +621,8 @@ char* Clean_after_your_dog(unsigned int l, char *b)
     char k = b[0];
     unsigned int i = 0;
     while (k < 49 || k > 58) {                                                              // On parcours la chaine jusqu'au premier caractère valide non-nul
-        i++;
         k = b[i];
+        i++;
     }
     char* d = new char[l - i];                                                              // on crée une nouvelle chaine de taille adéquate
     
