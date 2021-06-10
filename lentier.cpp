@@ -7,23 +7,30 @@ using namespace std;
 
 
 void Affiche_lentier(lentier a) {
+    
+    unsigned int i;
+    i = 0;
+    
     cout << "{";
-    for (unsigned int u = 0; u < a.size - 1; u++) {
-        cout << a.p[u] << ",";
+    while (i < a.size) {
+        cout << a.p[i] << ", ";
+        i++;
     }
-    cout << a.p[a.size - 1] << "}" << endl;
+    cout << "}" << endl;
 }
 
 
 void lAdjust(lentier &a) {
-    unsigned int i = a.size;
+    
+    unsigned int i;
+    i = a.size;
 
-    while (i) {
-        if (a.p[i - 1] == 0) {
-            i--;
+    while (i > 0) {
+        if (*&a.p[i - 1] == 0) {
+            a.size = a.size - 1;
+            i = i - 1;
         }
-        else{
-            a.size = i;
+        else {
             i = 0;
         }
     }
@@ -621,8 +628,8 @@ char* Clean_after_your_dog(unsigned int l, char *b)
     char k = b[0];
     unsigned int i = 0;
     while (k < 49 || k > 58) {                                                              // On parcours la chaine jusqu'au premier caractère valide non-nul
-        k = b[i];
         i++;
+        k = b[i];
     }
     char* d = new char[l - i];                                                              // on crée une nouvelle chaine de taille adéquate
     
