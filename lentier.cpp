@@ -548,7 +548,7 @@ lentier div_eucl(lentier a, lentier b) {
 	}
 	r = na;
 	delete[] nb.p;
-	delete[] q.p;																			// à enlever pour la fonction de Loris 																
+	delete[] q.p;																			// à enlever pour la fonction de Loris
 	lAdjust_realloc(r);																		// est ce qu'il faut mettre un & (voir page 10 fascicule)
 	return r;
 }
@@ -564,10 +564,10 @@ quores div_eucl_QR(lentier a, lentier b) {
 
     for (i = a.size; i > 0; i--) {
         temp = (temp << 32) + a.p[i - 1];
-        res.quotient.p[i - 1] = (int)(temp / b.p[0]);
+        res.quotient.p[i - 1] = (unsigned int)(temp / b.p[0]);
         temp = temp % b.p[0];
     }
-    res.reste = (int)temp;
+    res.reste = (unsigned int)temp;
 
     return res;
   }
