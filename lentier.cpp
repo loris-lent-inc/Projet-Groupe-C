@@ -159,8 +159,8 @@ lentier add_lentier(lentier a, lentier b)
 }
 
 
-char cmp_lentier(lentier a, lentier b) 
-{
+char cmp_lentier(lentier a, lentier b)                                                      // ATTENTION : des noms de variables ont été modifiées par rapport au code original pour limiter le nombre d'attributuions à faire
+{                                                                                           // Modifications faites par Loris Pinto qui en prend l'entière responsabilité, suite au refus de Jean-Baptiste Martin de coopérer avec le groupe.
  	lAdjust_realloc(a);
 	lAdjust_realloc(b);                                                                     //On enlève les zéros aux bits de poid fort des lentiers 
 
@@ -579,11 +579,9 @@ unsigned int lentier_log2(lentier c) {
 
 
 char* lentier2dec(lentier L) {
-	unsigned int length, n, x;
+	unsigned int length, n;
     n = 9;                                                                                  // Puissance de 10 pour optimisation : 10^9
     length = (lentier_log2(L) >> 1) / n;                                                    // La longueur en base 2, divisée par 2 est approx. longueur en base 10 divisé par n car on divise par 10^n, donc n fois moins que si on divisait par 10
-
-    char k, v;
 
     quores res_div;                                                                         // On crée un type composé qui contiendra le quotient et le reste de la division
     res_div.quotient = L;                                                                   // Initialisé avec lentier passé en paramètre
