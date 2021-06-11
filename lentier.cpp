@@ -93,7 +93,9 @@ lentier mult_classique(lentier a, lentier b) {
 
 
 lentier mul_mod(lentier a, lentier b, lentier N) {
-    return div_eucl(mult_classique(a, b), N);
+    lentier p = mult_classique(a, b);
+    lentier q = div_eucl(p, N);
+    return q;
 }
 
 
@@ -104,10 +106,11 @@ lentier add_lentier(lentier a, lentier b)
     lentier s;
     c = 0;                                                                                  // retenue
     i = 0;
-    (s.p) = new unsigned int[32];                                                           // allocation d'espace pour le resultat de l'add
+    //s.p = new unsigned int[32];                                                           // allocation d'espace pour le resultat de l'add
 
     if (a.size < b.size)                                                                    // cas dans lequel B est + grand
     {
+        s.p = new unsigned int[b.size + 1];
         while (i <= b.size - 1)
         {
             if (i < a.size)                                                                         // tant que le bit de A de rang i n'est pas nul, on l'ajoute à B et C
@@ -126,6 +129,7 @@ lentier add_lentier(lentier a, lentier b)
     }
     else                                                                                    // même chose avec A plus grand lentier ou de même taille
     {
+        s.p = new unsigned int[a.size + 1];
         while (i <= a.size - 1)
         {
             if (i < b.size)
@@ -302,7 +306,7 @@ lentier sub_lentier(lentier a, lentier b) {
     for (i = 0; i < n; i++)
 
     {
-        (*(ps + i)) = ((*(pa + i)) - (*(b.p + i)) - c) & 0x0FFFFFFFF;;
+        (*(ps + i)) = ((*(pa + i)) - (*(b.p + i)) - c) & 0x0FFFFFFFF;
 
         if ((*(pa + i)) >= (*(b.p + i)))
         {
@@ -321,7 +325,7 @@ lentier sub_lentier(lentier a, lentier b) {
     s.size = n;
     s.p = ps;
 
-    lAdjust(s); //on enlève les 0 excédentaires du résultat
+    lAdjust_realloc(s); //on enlève les 0 excédentaires du résultat
 
     return s;
 }
@@ -526,6 +530,10 @@ lentier div_eucl(lentier a, lentier b) {
                 buffer3.p = new unsigned int[1];
                 buffer3.size = 1;
                 buffer3.p[0] = q.p[i - nb.size];
+                
+                lAdjust_realloc(buffer1);
+                lAdjust_realloc(buffer2);
+                lAdjust_realloc(buffer3);
 
                 buffer4 = mult_classique(buffer2, buffer3);
 
