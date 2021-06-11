@@ -328,7 +328,32 @@ lentier sub_lentier(lentier a, lentier b) {
 
 
 lentier exp_mod(lentier a, lentier x, lentier N) {
-    return a;
+    lentier P;						                                                            //déclaration de P;
+    P.size = N.size;				                                                            //initialisation de la taille du tableau (32 éléments de 32 bits de longueur (unsigned int));
+    P.p = new unsigned int[P.size];                                                             //initialisation du tableau de unsigned int;
+    lentier temp;
+
+    for (unsigned int i = 0; i < a.size; i++)			                                        // size correspond au nombre d'élément dans le tableau(p) du lentier 
+    {
+        P.p[i] = a.p[i];			                                                            // pour toute la boucle for, copie du tableau de a dans P;
+    }
+
+    for (int i = 32 * x.size - 2; i >= 0; i--)                                                  // On parcourt N en ordre descendant bit par bit; 
+    {
+        temp = mul_mod(P, P, N);
+        delete[] P.p;
+        P = temp;                                                                                       // P = P*P reste N
+        if (x.p[i / 32] & (1 << (i % 32)))                                                              // si ei = 1
+        {
+            temp = mul_mod(P, a, N);
+            delete[] P.p;
+            P = temp;
+        }
+        //cout << "boucle " << i << endl;
+
+    }
+    return P;                                                                                   // on renvoie le résultat
+
 }
 
 
