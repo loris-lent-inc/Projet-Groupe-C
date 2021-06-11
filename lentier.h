@@ -3,24 +3,6 @@ typedef struct {
     unsigned int size;
 } lentier;
 
-/*
-test_vector est un types composé de plusieurs lentier, (a, b, N, et x) 
-pour les entrees, res pour le resultat, et expec_res pour le resultat attendu.
-Pour écrire les résultats des tests, on peut mettre le nom de la fonction dans "function"
-Dans le main, il faut créer un test_vector, assigner les operande et le résultat attendu 
-Calculer le résultat donné par la fonction puis comparer avec cmp_lentier.
-*/
-typedef struct {
-    char function[30];
-    
-    lentier a;
-    lentier b;
-    lentier N;
-    lentier x;
-
-    lentier res;
-    lentier expec_res;
-} test_vector;
 
 /*
 quores est un type composé de d'un lentier et d'un unsigned int,

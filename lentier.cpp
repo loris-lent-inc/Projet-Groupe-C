@@ -7,10 +7,10 @@ using namespace std;
 
 
 void Affiche_lentier(lentier a) {
-    
+
     unsigned int i;
     i = 0;
-    
+
     cout << "{";
     while (i < a.size) {
         cout << a.p[i] << ", ";
@@ -21,17 +21,18 @@ void Affiche_lentier(lentier a) {
 
 
 void lAdjust(lentier &a) {
-    
+
     unsigned int i;
     i = a.size;
-
-    while (i > 0) {
-        if (*&a.p[i - 1] == 0) {
-            a.size = a.size - 1;
-            i = i - 1;
-        }
-        else {
-            i = 0;
+    if (a.size != 1) {
+        while (i > 0) {
+            if (*&a.p[i - 1] == 0) {
+                a.size = a.size - 1;
+                i = i - 1;
+            }
+            else {
+                i = 0;
+            }
         }
     }
 }
@@ -39,7 +40,7 @@ void lAdjust(lentier &a) {
 
 void lAdjust_realloc(lentier &a) {
     lAdjust(a);
-    
+
     lentier new_a;
     new_a.size = a.size;
     new_a.p = new unsigned int[a.size];
@@ -51,28 +52,6 @@ void lAdjust_realloc(lentier &a) {
     delete[] a.p;
 
     a = new_a;
-}
-
-
-void v_test(test_vector &T) {
-    if (!cmp_lentier(T.expec_res, T.res)) {
-        cout << "Test sur " << T.function << " reussi !" << endl;
-    }
-
-    else {
-        cout << "ECHEC - Test sur " << T.function << " échoué !" << endl;
-    }
-}
-
-
-void delete_vector(test_vector &T) {
-    delete[] T.a.p;
-    delete[] T.b.p;
-    delete[] T.x.p;
-    delete[] T.N.p;
-
-    delete[] T.expec_res.p;
-    delete[] T.res.p;
 }
 
 
@@ -108,6 +87,8 @@ lentier mult_classique(lentier a, lentier b) {
         w.p[i + t] = c;
         i++;
     }
+    
+    lAdjust_realloc(w);
     return w;                                                                               // renvoi du résultat
 }
 
@@ -168,49 +149,49 @@ lentier add_lentier(lentier a, lentier b)
 
 char cmp_lentier(lentier a, lentier b)                                                      // ATTENTION : des noms de variables ont été modifiées par rapport au code original pour limiter le nombre d'attributuions à faire
 {                                                                                           // Modifications faites par Loris Pinto qui en prend l'entière responsabilité, suite au refus de Jean-Baptiste Martin de coopérer avec le groupe.
- 	lAdjust_realloc(a);
-	lAdjust_realloc(b);                                                                     //On enlève les zéros aux bits de poid fort des lentiers 
+    //lAdjust_realloc(a);
+    //lAdjust_realloc(b);                                                                     //On enlève les zéros aux bits de poid fort des lentiers 
 
-	char x;
-	unsigned int taille_decremente;                                                         //Variable discrète de la boucle qui "balayer" les lentier du mot de poid fort au mot de poid faible.
+    char x;
+    unsigned int taille_decremente;                                                         //Variable discrète de la boucle qui "balayer" les lentier du mot de poid fort au mot de poid faible.
 
-	if (a.size > b.size)                                                                    //les zéros de poid fort étant enlevés, si un lentier est plus long que l'autre, il est aussi supérieur
-	{
-		x = 1;
-	}
+    if (a.size > b.size)                                                                    //les zéros de poid fort étant enlevés, si un lentier est plus long que l'autre, il est aussi supérieur
+    {
+        x = 1;
+    }
 
-	if (b.size > a.size)                                                                    //les zéros de poid fort étant enlevés, si un lentier est plus petit que l'autre, il est aussi inférieur
-	{
-		x = -1;
-	}
+    if (b.size > a.size)                                                                    //les zéros de poid fort étant enlevés, si un lentier est plus petit que l'autre, il est aussi inférieur
+    {
+        x = -1;
+    }
 
-	if (a.size == b.size)                                                                   //les tailles des deux lentiers sont égales : il fzut mainntenant étudier les valeurs de leur mot 
-	{
-		taille_decremente = a.size;
+    if (a.size == b.size)                                                                   //les tailles des deux lentiers sont égales : il fzut mainntenant étudier les valeurs de leur mot 
+    {
+        taille_decremente = a.size;
 
-		while (taille_decremente > 0)
-		{
-			if (a.p[taille_decremente - 1] > b.p[taille_decremente - 1])
-			{
-				x = 1;
-				taille_decremente = 0;                                                              //Méthode pour sortir de cette de boucle while : et retourner x
-			}
+        while (taille_decremente > 0)
+        {
+            if (a.p[taille_decremente - 1] > b.p[taille_decremente - 1])
+            {
+                x = 1;
+                taille_decremente = 0;                                                              //Méthode pour sortir de cette de boucle while : et retourner x
+            }
 
-			else if (a.p[taille_decremente - 1] < b.p[taille_decremente - 1])
-			{
-				x = -1;
-				taille_decremente = 0;                                                              //Méthode pour sortir de cette de boucle while : et retourner x
-			}
+            else if (a.p[taille_decremente - 1] < b.p[taille_decremente - 1])
+            {
+                x = -1;
+                taille_decremente = 0;                                                              //Méthode pour sortir de cette de boucle while : et retourner x
+            }
 
-			else if (a.p[taille_decremente - 1] == b.p[taille_decremente - 1])
-			{
-				taille_decremente = taille_decremente - 1;                                          //On doit étudier le mot d'après
-				x = 0;
-			}
-		}
-	}
+            else if (a.p[taille_decremente - 1] == b.p[taille_decremente - 1])
+            {
+                taille_decremente = taille_decremente - 1;                                          //On doit étudier le mot d'après
+                x = 0;
+            }
+        }
+    }
 
-	return (x);
+    return (x);
 }
 
 
@@ -236,7 +217,7 @@ lentier B2BRightShift(lentier a, int amount, char modifySize) {
     result.size = a.size;
     result.p = new unsigned int[result.size];
 
-    for (i = a.size ; i > 0; i--) {
+    for (i = a.size; i > 0; i--) {
         result.p[i - 1] = (a.p[i - 1] >> amount) + buffer;
         buffer = a.p[i] << (32 - amount);
     }
@@ -284,7 +265,7 @@ lentier Allonge_lentier(lentier x, unsigned int size) {
 
     z.size = size;
     z.p = j;
-    delete[x.size] x.p;                                           // faut-il delete les arguments ?
+    //delete[] x.p;                                           // faut-il delete les arguments ?
     return(z);
 }
 
@@ -347,217 +328,222 @@ lentier sub_lentier(lentier a, lentier b) {
 }
 
 
-lentier init_lentier(unsigned int a) {
-	lentier n;
+lentier exp_mod(lentier a, lentier x, lentier N) {
+    return a;
+}
 
-	n.size = 1; //Le lentier ne contient qu'un seul digit
-	n.p = new unsigned int;
-	*(n.p) = a; //Le digit prend la valeur de l'entier passé en paramètre
-	return n;
+
+lentier init_lentier(unsigned int a) {
+    lentier n;
+
+    n.size = 1; //Le lentier ne contient qu'un seul digit
+    n.p = new unsigned int;
+    *(n.p) = a; //Le digit prend la valeur de l'entier passé en paramètre
+    return n;
 }
 
 
 lentier dec2lentier(char* nombre_dec) {
-	//Structures lentier nécessaires
-	lentier buffer1, buffer2, digit, dix;
+    //Structures lentier nécessaires
+    lentier buffer1, buffer2, digit, dix;
 
-	//Nombre 10^n en base 10
-	unsigned int idigit;
+    //Nombre 10^n en base 10
+    unsigned int idigit;
 
-	//Taille de la chaine de caractères
-	unsigned int nb_digit = strlen(nombre_dec);
+    //Taille de la chaine de caractères
+    unsigned int nb_digit = strlen(nombre_dec);
 
-	//Initialisation buffer1 = 0 et dix = 10 (en base 2^32)
-	buffer1 = init_lentier(0);
-	dix = init_lentier(10);
+    //Initialisation buffer1 = 0 et dix = 10 (en base 2^32)
+    buffer1 = init_lentier(0);
+    dix = init_lentier(10);
 
 
-	//L'algorithme qui suit reprend la méthode de Horner
-	//
-	for (unsigned int i = 0; i < nb_digit; i++) {
-		idigit = nombre_dec[i] - '0'; //Nombre d'incide i dans la chaine (Conversion forcé de type)
+    //L'algorithme qui suit reprend la méthode de Horner
+    //
+    for (unsigned int i = 0; i < nb_digit; i++) {
+        idigit = nombre_dec[i] - '0'; //Nombre d'incide i dans la chaine (Conversion forcé de type)
 
-		digit = init_lentier(idigit); //Convertion du digit (base 10)-->(base 2^32)
+        digit = init_lentier(idigit); //Convertion du digit (base 10)-->(base 2^32)
 
-		//Multiplication par 10 du buffer2
-		buffer2 = mult_classique(buffer1, dix);
+        //Multiplication par 10 du buffer2
+        buffer2 = mult_classique(buffer1, dix);
 
-		delete[] buffer1.p;
+        delete[] buffer1.p;
 
-		buffer1 = buffer2; //Swap buffer1 et buffer2
+        buffer1 = buffer2; //Swap buffer1 et buffer2
 
-		//Ajout du au buffer2 du digit
-		buffer2 = add_lentier(buffer1, digit);
+        //Ajout du au buffer2 du digit
+        buffer2 = add_lentier(buffer1, digit);
 
-		delete[] buffer1.p;
-		delete[] digit.p;
+        delete[] buffer1.p;
+        delete[] digit.p;
 
-		buffer1 = buffer2; //Swap buffer1 et buffer2
+        buffer1 = buffer2; //Swap buffer1 et buffer2
 
-		lAdjust_realloc(buffer1);
-	}
+        lAdjust_realloc(buffer1);
+    }
 
-	//Libération de la mémoire avant la fin de la fonction
-	delete[] dix.p;
+    //Libération de la mémoire avant la fin de la fonction
+    delete[] dix.p;
 
-	return buffer1;
+    return buffer1;
 }
 
 
 lentier div_eucl(lentier a, lentier b) {
-	// Variables locales
-	unsigned int i; // compteur
-	unsigned char lambda;
-	const unsigned long long int BASE = 0x100000000;
-	unsigned long long int templl;
+    // Variables locales
+    unsigned int i; // compteur
+    unsigned char lambda;
+    const unsigned long long int BASE = 0x100000000;
+    unsigned long long int templl;
 
-	lentier q, r, buffer1, buffer2, buffer3, buffer4, na, nb; //q = quotient, r = reste
-	q.size = a.size - b.size;
-	q.p = new unsigned int[q.size]();
-	na.size = a.size;
-	na.p = new unsigned int[na.size];
-	for (i = 0; i < a.size; i++) {
-		*(na.p + i) = *(a.p + i);
-	}
+    lentier q, r, buffer1, buffer2, buffer3, buffer4, na, nb; //q = quotient, r = reste
+    q.size = a.size - b.size;
+    q.p = new unsigned int[q.size]();
+    na.size = a.size;
+    na.p = new unsigned int[na.size];
+    for (i = 0; i < a.size; i++) {
+        *(na.p + i) = *(a.p + i);
+    }
 
-	//na.p = a.p;
-	nb.size = b.size;
-	nb.p = new unsigned int[nb.size];
-	for (i = 0; i < b.size; i++) {
-		nb.p[i] = b.p[i];
-	}
+    //na.p = a.p;
+    nb.size = b.size;
+    nb.p = new unsigned int[nb.size];
+    for (i = 0; i < b.size; i++) {
+        nb.p[i] = b.p[i];
+    }
 
-	/*
-	Partie 1 :
-	Pas besoin de le faire, les bits de q ont été initialisé à 0 lors de sa déclaration avec les parenthèses 	après les [] (voir page 2 fascicule de projet)
-	*/
-	if (cmp_lentier(na, nb) == -1) {
-		//il est demandé que A et B aient le même nombre de mots mais il n'est pas dit que A doit être supérieur à B
+    /*
+    Partie 1 :
+    Pas besoin de le faire, les bits de q ont été initialisé à 0 lors de sa déclaration avec les parenthèses 	après les [] (voir page 2 fascicule de projet)
+    */
+    if (cmp_lentier(na, nb) == -1) {
+        //il est demandé que A et B aient le même nombre de mots mais il n'est pas dit que A doit être supérieur à B
 
-		/*
-		q.size = 1;
-		delete q.p[];
-		q.p = new unsigned int[1];
-		Non nécessaire, car nous retournons que le reste dans cette fonction
-		*/
+        /*
+        q.size = 1;
+        delete q.p[];
+        q.p = new unsigned int[1];
+        Non nécessaire, car nous retournons que le reste dans cette fonction
+        */
 
-	}
-	else {//Algo donné
-	 //Optimisation lambda
-		lambda = 0;
-		while (nb.p[nb.size - 1] < BASE / 2) {
+    }
+    else {//Algo donné
+     //Optimisation lambda
+        lambda = 0;
+        while (nb.p[nb.size - 1] < BASE / 2) {
 
-			buffer1 = B2BLeftShift(na, 1, 1);
-			delete[] na.p;
-			na = buffer1;
+            buffer1 = B2BLeftShift(na, 1, 1);
+            delete[] na.p;
+            na = buffer1;
 
-			buffer1 = B2BLeftShift(nb, 1, 0);
-			delete[] nb.p;
-			nb = buffer1;
+            buffer1 = B2BLeftShift(nb, 1, 0);
+            delete[] nb.p;
+            nb = buffer1;
 
-			++lambda;
-		}
+            ++lambda;
+        }
 
 
-		// Partie 2 :
-		if (na.size > nb.size) {
-			// ici le Buffer1 correspond à B multiplié par la base à la puissance n-t (équivalent à a.size - b.size)
-			buffer1 = W2WLeftShift(nb, na.size - nb.size);
-		}
-		else {
-			buffer1 = nb;
-		}
-		while (cmp_lentier(na, buffer1) >= 0) {
-			q.p[na.size - nb.size] = q.p[na.size - nb.size] + 1;
-			buffer2 = sub_lentier(na, buffer1);
-			delete[] na.p;
-			na = buffer2;
-		}
+        // Partie 2 :
+        if (na.size > nb.size) {
+            // ici le Buffer1 correspond à B multiplié par la base à la puissance n-t (équivalent à a.size - b.size)
+            buffer1 = W2WLeftShift(nb, na.size - nb.size);
+        }
+        else {
+            buffer1 = nb;
+        }
+        while (cmp_lentier(na, buffer1) >= 0) {
+            q.p[na.size - nb.size] = q.p[na.size - nb.size] + 1;
+            buffer2 = sub_lentier(na, buffer1);
+            delete[] na.p;
+            na = buffer2;
+        }
 
-		// Partie 3 :
-		for (i = na.size - 1; i >= nb.size; --i) {
-			// 3.a)
-			if (na.p[i] == nb.p[nb.size - 1]) {
-				q.p[i - nb.size] = BASE - 1;
-			}
-			else {
-				templl = (((unsigned long long int)na.p[i]) << 32) + na.p[i - 1];
-				q.p[i - nb.size] = ((unsigned int)(templl / nb.p[nb.size - 1]));
-			}
+        // Partie 3 :
+        for (i = na.size - 1; i >= nb.size; --i) {
+            // 3.a)
+            if (na.p[i] == nb.p[nb.size - 1]) {
+                q.p[i - nb.size] = BASE - 1;
+            }
+            else {
+                templl = (((unsigned long long int)na.p[i]) << 32) + na.p[i - 1];
+                q.p[i - nb.size] = ((unsigned int)(templl / nb.p[nb.size - 1]));
+            }
 
-			// 3.b)
-			buffer1.p = new unsigned int[3];
-			buffer1.size = 3;
-			buffer1.p[2] = na.p[i];
-			buffer1.p[1] = na.p[i - 1];
-			buffer1.p[0] = na.p[i - 2];
+            // 3.b)
+            buffer1.p = new unsigned int[3];
+            buffer1.size = 3;
+            buffer1.p[2] = na.p[i];
+            buffer1.p[1] = na.p[i - 1];
+            buffer1.p[0] = na.p[i - 2];
 
-			buffer2.p = new unsigned int[2];
-			buffer2.size = 2;
-			buffer2.p[1] = nb.p[nb.size - 1];
-			buffer2.p[0] = nb.p[nb.size - 2];
+            buffer2.p = new unsigned int[2];
+            buffer2.size = 2;
+            buffer2.p[1] = nb.p[nb.size - 1];
+            buffer2.p[0] = nb.p[nb.size - 2];
 
-			buffer3.p = new unsigned int[1];
-			buffer2.size = 1;
-			buffer3.p[0] = q.p[i - nb.size];
+            buffer3.p = new unsigned int[1];
+            buffer3.size = 1;
+            buffer3.p[0] = q.p[i - nb.size];
 
-			buffer4 = mult_classique(buffer2, buffer3);
+            buffer4 = mult_classique(buffer2, buffer3);
 
-			while (cmp_lentier(buffer4, buffer1) == 1) {
-				q.p[i - nb.size] = q.p[i - nb.size] - 1;
-				buffer3.p[0] = q.p[i - nb.size];
+            while (cmp_lentier(buffer4, buffer1) == 1) {
+                q.p[i - nb.size] = q.p[i - nb.size] - 1;
+                buffer3.p[0] = q.p[i - nb.size];
 
-				delete[] buffer4.p;
-				buffer4 = mult_classique(buffer2, buffer3);
-			}
-			delete[] buffer1.p;
-			delete[] buffer2.p;
-			delete[] buffer3.p;
-			delete[] buffer4.p;
+                delete[] buffer4.p;
+                buffer4 = mult_classique(buffer2, buffer3);
+            }
+            delete[] buffer1.p;
+            delete[] buffer2.p;
+            delete[] buffer3.p;
+            delete[] buffer4.p;
 
-			// 3.c) et 3.d)
-			buffer1.p = new unsigned int[1];
-			buffer1.size = 1;
-			buffer1.p[0] = q.p[i - nb.size];
-			buffer2 = W2WLeftShift(buffer1, i - nb.size);
-			delete[] buffer1.p;
-			buffer1 = mult_classique(buffer2, nb);
-			delete[] buffer2.p;
+            // 3.c) et 3.d)
+            buffer1.p = new unsigned int[1];
+            buffer1.size = 1;
+            buffer1.p[0] = q.p[i - nb.size];
+            buffer2 = W2WLeftShift(buffer1, i - nb.size);
+            delete[] buffer1.p;
+            buffer1 = mult_classique(buffer2, nb);
+            delete[] buffer2.p;
 
-			if (cmp_lentier(na, buffer1) == -1) {
-				q.p[i - nb.size] = q.p[i - nb.size] - 1;
+            if (cmp_lentier(na, buffer1) == -1) {
+                q.p[i - nb.size] = q.p[i - nb.size] - 1;
 
-				delete[] buffer1.p;
-				buffer1.p = new unsigned int[1];
-				buffer1.size = 1;
-				buffer1.p[0] = q.p[i - nb.size];
-				buffer2 = W2WLeftShift(buffer1, i - nb.size);
-				delete[] buffer1.p;
-				buffer1 = mult_classique(buffer2, nb);
-				delete[] buffer2.p;
-				buffer2 = sub_lentier(na, buffer1);
-				delete[] na.p;
-				delete[] buffer1.p;
-				na = buffer2;
-			}
-			else {
-				buffer2 = sub_lentier(na, buffer1);
-				delete[] na.p;
-				delete[] buffer1.p;
-				na = buffer2;
-			}
-		}
-	}
-	if (lambda > 0) {
-		buffer1 = B2BRightShift(na, (int)lambda, 1);
-		delete[] na.p;
-		na = buffer1;
-	}
-	r = na;
-	delete[] nb.p;
-	delete[] q.p;																			// à enlever pour la fonction de Loris
-	lAdjust_realloc(r);																		// est ce qu'il faut mettre un & (voir page 10 fascicule)
-	return r;
+                delete[] buffer1.p;
+                buffer1.p = new unsigned int[1];
+                buffer1.size = 1;
+                buffer1.p[0] = q.p[i - nb.size];
+                buffer2 = W2WLeftShift(buffer1, i - nb.size);
+                delete[] buffer1.p;
+                buffer1 = mult_classique(buffer2, nb);
+                delete[] buffer2.p;
+                buffer2 = sub_lentier(na, buffer1);
+                delete[] na.p;
+                delete[] buffer1.p;
+                na = buffer2;
+            }
+            else {
+                buffer2 = sub_lentier(na, buffer1);
+                delete[] na.p;
+                delete[] buffer1.p;
+                na = buffer2;
+            }
+        }
+    }
+    if (lambda > 0) {
+        buffer1 = B2BRightShift(na, (int)lambda, 1);
+        delete[] na.p;
+        na = buffer1;
+    }
+    r = na;
+    delete[] nb.p;
+    delete[] q.p;																			// à enlever pour la fonction de Loris
+    lAdjust_realloc(r);																		// est ce qu'il faut mettre un & (voir page 10 fascicule)
+    return r;
 }
 
 
@@ -577,66 +563,75 @@ quores div_eucl_QR(lentier a, lentier b) {
     res.reste = (unsigned int)temp;
 
     return res;
-  }
+}
 
 
 unsigned long long int lentier_log2(lentier a) {
-    return (unsigned long long int)((a.size - 1) * 32 + ceil(log2(a.p[a.size - 1])));
+    return (unsigned long long int)(a.p[a.size - 1] != 0) ? ((a.size - 1) * 32 + ceil(log2(a.p[a.size - 1]))) : ((a.size - 1) * 32);
 }
 
 
 char* lentier2dec(lentier L) {
-	unsigned int length, n;
-    n = 9;                                                                                  // Puissance de 10 pour optimisation : 10^9
-    length = (lentier_log2(L) >> 1) / n;                                                    // La longueur en base 2, divisée par 2 est approx. longueur en base 10 divisé par n car on divise par 10^n, donc n fois moins que si on divisait par 10
-
-    quores res_div;                                                                         // On crée un type composé qui contiendra le quotient et le reste de la division
-    res_div.quotient = L;                                                                   // Initialisé avec lentier passé en paramètre
-
-    lentier l_10n = init_lentier(pow(10, n));                                               // lentier contenant 10^n pour les divisions
+    char* b10 = nullptr;
     
-    char* b10 = new char[length * n + 1];                                                   // pointeur vers tableau qui stockera chiffre par chiffre lentier converti en base 10 (ce qu'on retourne)
-
-
-    for (unsigned int i = length; i > 0; i--) {                                             // en faisant une division par 10^n, le reste aura n chiffres, donc on fait une sous-boucle avec des divisions sur des int (et pas sur des lentier => plus rapide) pour récupérer ces n chiffres 1 par 1, puis on fait le quotient par 10^n et on recommence à partir de ce quotient
-        res_div = div_eucl_QR(res_div.quotient, l_10n);                                                 // on met quotient+reste par 10^n dans le type compo
-
-        if ((res_div.quotient.size - 1) || res_div.quotient.p[0] || res_div.reste) {                    // Tant que le reste ou le quotien sont non nuls (au moins un des deux), on continue la boucle :
-            uint8_t j = n;
-            while (j) {                                                                                 // sous-boucle : reste dans [0 ; 10^n - 1] donc on le re partage en ses n chiffres [0 ; 9] :
-                b10[(i - 1) * n + j] = (res_div.reste % 10) + '0';                                                                       // on prend le reste par 10 pour le chiffre cherché
-                res_div.reste = res_div.reste / 10;                                                             // puis quotient par 10 pour passer au chiffre suivant ; le tout n fois pour les n chiffres
-                j--;
-            }
-
-        }
-        else {                                                                                      // si le reste et le quotien de la division nuls (aka dès que tous les chiffres sont récupérés) on quitte la boucle
-            break;
-        }
+    if (L.size == 1 && L.p[0] == 0) {
+        b10 = (char*)"0";
     }
+    else {
+        unsigned int length, n;
+        n = 9;                                                                                  // Puissance de 10 pour optimisation : 10^9
+        length = (lentier_log2(L) >> 1) / n;                                                    // La longueur en base 2, divisée par 2 est approx. longueur en base 10 divisé par n car on divise par 10^n, donc n fois moins que si on divisait par 10
+        length = (length == 0) ? (1) : (length);
 
-    delete[] res_div.quotient.p;
-    delete[] l_10n.p;                                                                       // on delete les pointeurs internes MAIS PAS b10, pointeur de retour, à delete[] après appel.
+        quores res_div;                                                                         // On crée un type composé qui contiendra le quotient et le reste de la division
+        res_div.quotient = L;                                                                   // Initialisé avec lentier passé en paramètre
 
-    b10 = Clean_after_your_dog(length * n, b10);
+        lentier l_10n = init_lentier(pow(10, n));                                               // lentier contenant 10^n pour les divisions
 
+       b10 = new char[length * n + 1];                                                          // pointeur vers tableau qui stockera chiffre par chiffre lentier converti en base 10 (ce qu'on retourne)
+
+        uint8_t j = n;
+
+        for (unsigned int i = length; i > 0; i--) {                                             // en faisant une division par 10^n, le reste aura n chiffres, donc on fait une sous-boucle avec des divisions sur des int (et pas sur des lentier => plus rapide) pour récupérer ces n chiffres 1 par 1, puis on fait le quotient par 10^n et on recommence à partir de ce quotient
+            res_div = div_eucl_QR(res_div.quotient, l_10n);                                                 // on met quotient+reste par 10^n dans le type compo
+
+            if ((res_div.quotient.size - 1) || res_div.quotient.p[0] || res_div.reste) {                    // Tant que le reste ou le quotien sont non nuls (au moins un des deux), on continue la boucle :
+                j = n;
+                while (j) {                                                                                 // sous-boucle : reste dans [0 ; 10^n - 1] donc on le re partage en ses n chiffres [0 ; 9] :
+                    b10[(i - 1) * n + j] = (res_div.reste % 10) + '0';                                                                       // on prend le reste par 10 pour le chiffre cherché
+                    res_div.reste = res_div.reste / 10;                                                             // puis quotient par 10 pour passer au chiffre suivant ; le tout n fois pour les n chiffres
+                    j--;
+                }
+
+            }
+            else {                                                                                      // si le reste et le quotien de la division nuls (aka dès que tous les chiffres sont récupérés) on quitte la boucle
+                b10[(i - 1) * n + j] = '0';
+                break;
+            }
+        }
+
+        delete[] res_div.quotient.p;
+        delete[] l_10n.p;                                                                       // on delete les pointeurs internes MAIS PAS b10, pointeur de retour, à delete[] après appel.
+        b10 = Clean_after_your_dog(length * n, b10);
+    }
     return b10;
 }
 
 char* Clean_after_your_dog(unsigned int l, char *b)
-{
+{    
     char k = b[0];
     unsigned int i = 0;
-    while (k < 49 || k > 58) {                                                              // On parcours la chaine jusqu'au premier caractère valide non-nul
+    while ((k < 49 || k > 58) && i <= l) {                                                              // On parcours la chaine jusqu'au premier caractère valide non-nul
         i++;
         k = b[i];
     }
-    char* d = new char[l - i];                                                              // on crée une nouvelle chaine de taille adéquate
+    char* d = new char[l - i + 2];                                                              // on crée une nouvelle chaine de taille adéquate
+    d[l - i + 1] = '\0';
     
     unsigned int start = i;                                                                 // On retiens l'indice du premier caractère valide
-    
+
     l = l + i;                                                                              // En ajoutant i à l, on assure que la boucle parcourera précisément les caractères valides de la chaine
-    
+
     for (i; i <= l; i++) {
         if (b[i] > 47 && b[i] < 58) {
             d[i - start] = b[i];                                                                    // Tant que les caractères sont des chiffres, on les ajoutes à la nouvelle chaine
@@ -645,7 +640,7 @@ char* Clean_after_your_dog(unsigned int l, char *b)
             break;                                                                                  // Sinon on arrête la copie
         }
     }
-   
+
     delete[] b;
     b = d;                                                                                  // On remplace b par la nouvelle chaine
     return b;
