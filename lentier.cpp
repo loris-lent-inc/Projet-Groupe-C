@@ -24,17 +24,16 @@ void lAdjust(lentier &a) {
 
     unsigned int i;
     i = a.size;
-    if (a.size != 1) {
-        while (i > 0) {
-            if (*&a.p[i - 1] == 0) {
-                a.size = a.size - 1;
-                i = i - 1;
-            }
-            else {
-                i = 0;
-            }
+    while (i > 0) {
+        if (*&a.p[i - 1] == 0) {
+            a.size = a.size - 1;
+            i = i - 1;
+        }
+        else {
+            i = 0;
         }
     }
+    a.size = (a.size == 0) ? (1) : (a.size);
 }
 
 
@@ -234,11 +233,11 @@ lentier B2BLeftShift(lentier a, int amount, char modifySize) {
 
     lentier result;
     result.size = a.size + 1;
-    result.p = new unsigned int[result.size];
+    result.p = new unsigned int[result.size]();
 
     for (i = 0; i <= a.size - 1; i++) {
         result.p[i] = (a.p[i] << amount) + buffer;
-        buffer = a.p[i] << (32 - amount);
+        buffer = a.p[i] >> (32 - amount);
     }
     if (modifySize == 1) {
         result.p[a.size] = buffer;
@@ -398,122 +397,126 @@ lentier div_eucl(lentier a, lentier b) {
     unsigned long long int templl;
 
     lentier q, r, buffer1, buffer2, buffer3, buffer4, na, nb; //q = quotient, r = reste
-    q.size = a.size - b.size;
-    q.p = new unsigned int[q.size]();
-    na.size = a.size;
-    na.p = new unsigned int[na.size];
-    for (i = 0; i < a.size; i++) {
-        *(na.p + i) = *(a.p + i);
-    }
 
-    //na.p = a.p;
-    nb.size = b.size;
-    nb.p = new unsigned int[nb.size];
-    for (i = 0; i < b.size; i++) {
-        nb.p[i] = b.p[i];
-    }
+    if (b.size == 1) {
+        templl = 0;
+        q.size = (a.size == 1) ? (1) : (a.size - 1);
+        q.p = new unsigned int[q.size];
 
-    /*
-    Partie 1 :
-    Pas besoin de le faire, les bits de q ont été initialisé à 0 lors de sa déclaration avec les parenthèses 	après les [] (voir page 2 fascicule de projet)
-    */
-    if (cmp_lentier(na, nb) == -1) {
-        //il est demandé que A et B aient le même nombre de mots mais il n'est pas dit que A doit être supérieur à B
+        for (i = a.size; i > 0; i--) {
+            templl = (templl << 32) + a.p[i - 1];
+            q.p[i - 1] = (unsigned int)(templl / b.p[0]);
+            templl = templl % b.p[0];
+        }
+        r.size = 1;
+        r.p = new unsigned int[1];
+        r.p[0] = (unsigned int)templl;
+    }
+    else {
+        q.size = (a.size == b.size) ? (1) : (a.size - b.size);
+        q.p = new unsigned int[q.size]();
+        na.size = a.size;
+        na.p = new unsigned int[na.size];
+        for (i = 0; i < a.size; i++) {
+            *(na.p + i) = *(a.p + i);
+        }
+
+        //na.p = a.p;
+        nb.size = b.size;
+        nb.p = new unsigned int[nb.size];
+        for (i = 0; i < b.size; i++) {
+            nb.p[i] = b.p[i];
+        }
 
         /*
-        q.size = 1;
-        delete q.p[];
-        q.p = new unsigned int[1];
-        Non nécessaire, car nous retournons que le reste dans cette fonction
+        Partie 1 :
+        Pas besoin de le faire, les bits de q ont été initialisé à 0 lors de sa déclaration avec les parenthèses 	après les [] (voir page 2 fascicule de projet)
         */
+        if (cmp_lentier(na, nb) == -1) {
+            //il est demandé que A et B aient le même nombre de mots mais il n'est pas dit que A doit être supérieur à B
 
-    }
-    else {//Algo donné
-     //Optimisation lambda
-        lambda = 0;
-        while (nb.p[nb.size - 1] < BASE / 2) {
+            /*
+            q.size = 1;
+            delete q.p[];
+            q.p = new unsigned int[1];
+            Non nécessaire, car nous retournons que le reste dans cette fonction
+            */
 
-            buffer1 = B2BLeftShift(na, 1, 1);
-            delete[] na.p;
-            na = buffer1;
-
-            buffer1 = B2BLeftShift(nb, 1, 0);
-            delete[] nb.p;
-            nb = buffer1;
-
-            ++lambda;
         }
+        else {//Algo donné
+         //Optimisation lambda
+            lambda = 0;
+            while (nb.p[nb.size - 1] < BASE / 2) {
+
+                buffer1 = B2BLeftShift(na, 1, 1);
+                delete[] na.p;
+                na = buffer1;
+
+                buffer1 = B2BLeftShift(nb, 1, 1);
+                delete[] nb.p;
+                nb = buffer1;
+
+                ++lambda;
+            }
 
 
-        // Partie 2 :
-        if (na.size > nb.size) {
-            // ici le Buffer1 correspond à B multiplié par la base à la puissance n-t (équivalent à a.size - b.size)
-            buffer1 = W2WLeftShift(nb, na.size - nb.size);
-        }
-        else {
-            buffer1 = nb;
-        }
-        while (cmp_lentier(na, buffer1) >= 0) {
-            q.p[na.size - nb.size] = q.p[na.size - nb.size] + 1;
-            buffer2 = sub_lentier(na, buffer1);
-            delete[] na.p;
-            na = buffer2;
-        }
-
-        // Partie 3 :
-        for (i = na.size - 1; i >= nb.size; --i) {
-            // 3.a)
-            if (na.p[i] == nb.p[nb.size - 1]) {
-                q.p[i - nb.size] = BASE - 1;
+            // Partie 2 :
+            if (na.size > nb.size) {
+                // ici le Buffer1 correspond à B multiplié par la base à la puissance n-t (équivalent à a.size - b.size)
+                buffer1 = W2WLeftShift(nb, na.size - nb.size);
             }
             else {
-                templl = (((unsigned long long int)na.p[i]) << 32) + na.p[i - 1];
-                q.p[i - nb.size] = ((unsigned int)(templl / nb.p[nb.size - 1]));
+                buffer1 = nb;
+            }
+            while (cmp_lentier(na, buffer1) >= 0) {
+                q.p[na.size - nb.size] = q.p[na.size - nb.size] + 1;
+                buffer2 = sub_lentier(na, buffer1);
+                delete[] na.p;
+                na = buffer2;
             }
 
-            // 3.b)
-            buffer1.p = new unsigned int[3];
-            buffer1.size = 3;
-            buffer1.p[2] = na.p[i];
-            buffer1.p[1] = na.p[i - 1];
-            buffer1.p[0] = na.p[i - 2];
+            // Partie 3 :
+            for (i = na.size - 1; i >= nb.size; --i) {
+                // 3.a)
+                if (na.p[i] == nb.p[nb.size - 1]) {
+                    q.p[i - nb.size] = BASE - 1;
+                }
+                else {
+                    templl = (((unsigned long long int)na.p[i]) << 32) + na.p[i - 1];
+                    q.p[i - nb.size] = ((unsigned int)(templl / nb.p[nb.size - 1]));
+                }
 
-            buffer2.p = new unsigned int[2];
-            buffer2.size = 2;
-            buffer2.p[1] = nb.p[nb.size - 1];
-            buffer2.p[0] = nb.p[nb.size - 2];
+                // 3.b)
+                buffer1.p = new unsigned int[3];
+                buffer1.size = 3;
+                buffer1.p[2] = na.p[i];
+                buffer1.p[1] = na.p[i - 1];
+                buffer1.p[0] = na.p[i - 2];
 
-            buffer3.p = new unsigned int[1];
-            buffer3.size = 1;
-            buffer3.p[0] = q.p[i - nb.size];
+                buffer2.p = new unsigned int[2];
+                buffer2.size = 2;
+                buffer2.p[1] = nb.p[nb.size - 1];
+                buffer2.p[0] = nb.p[nb.size - 2];
 
-            buffer4 = mult_classique(buffer2, buffer3);
-
-            while (cmp_lentier(buffer4, buffer1) == 1) {
-                q.p[i - nb.size] = q.p[i - nb.size] - 1;
+                buffer3.p = new unsigned int[1];
+                buffer3.size = 1;
                 buffer3.p[0] = q.p[i - nb.size];
 
-                delete[] buffer4.p;
                 buffer4 = mult_classique(buffer2, buffer3);
-            }
-            delete[] buffer1.p;
-            delete[] buffer2.p;
-            delete[] buffer3.p;
-            delete[] buffer4.p;
 
-            // 3.c) et 3.d)
-            buffer1.p = new unsigned int[1];
-            buffer1.size = 1;
-            buffer1.p[0] = q.p[i - nb.size];
-            buffer2 = W2WLeftShift(buffer1, i - nb.size);
-            delete[] buffer1.p;
-            buffer1 = mult_classique(buffer2, nb);
-            delete[] buffer2.p;
+                while (cmp_lentier(buffer4, buffer1) == 1) {
+                    q.p[i - nb.size] = q.p[i - nb.size] - 1;
+                    buffer3.p[0] = q.p[i - nb.size];
 
-            if (cmp_lentier(na, buffer1) == -1) {
-                q.p[i - nb.size] = q.p[i - nb.size] - 1;
-
+                    delete[] buffer4.p;
+                    buffer4 = mult_classique(buffer2, buffer3);
+                }
                 delete[] buffer1.p;
+                delete[] buffer2.p;
+                delete[] buffer3.p;
+                delete[] buffer4.p;
+
+                // 3.c) et 3.d)
                 buffer1.p = new unsigned int[1];
                 buffer1.size = 1;
                 buffer1.p[0] = q.p[i - nb.size];
@@ -521,29 +524,43 @@ lentier div_eucl(lentier a, lentier b) {
                 delete[] buffer1.p;
                 buffer1 = mult_classique(buffer2, nb);
                 delete[] buffer2.p;
-                buffer2 = sub_lentier(na, buffer1);
-                delete[] na.p;
-                delete[] buffer1.p;
-                na = buffer2;
-            }
-            else {
-                buffer2 = sub_lentier(na, buffer1);
-                delete[] na.p;
-                delete[] buffer1.p;
-                na = buffer2;
+
+                if (cmp_lentier(na, buffer1) == -1) {
+                    q.p[i - nb.size] = q.p[i - nb.size] - 1;
+
+                    delete[] buffer1.p;
+                    buffer1.p = new unsigned int[1];
+                    buffer1.size = 1;
+                    buffer1.p[0] = q.p[i - nb.size];
+                    buffer2 = W2WLeftShift(buffer1, i - nb.size);
+                    delete[] buffer1.p;
+                    buffer1 = mult_classique(buffer2, nb);
+                    delete[] buffer2.p;
+                    buffer2 = sub_lentier(na, buffer1);
+                    delete[] na.p;
+                    delete[] buffer1.p;
+                    na = buffer2;
+                }
+                else {
+                    buffer2 = sub_lentier(na, buffer1);
+                    delete[] na.p;
+                    delete[] buffer1.p;
+                    na = buffer2;
+                }
             }
         }
+        if (lambda > 0) {
+            buffer1 = B2BRightShift(na, (int)lambda, 1);
+            delete[] na.p;
+            na = buffer1;
+        }
+        r = na;
+        delete[] nb.p;
+        delete[] q.p;																			// à enlever pour la fonction de Loris
+        lAdjust_realloc(r);																		// est ce qu'il faut mettre un & (voir page 10 fascicule)
     }
-    if (lambda > 0) {
-        buffer1 = B2BRightShift(na, (int)lambda, 1);
-        delete[] na.p;
-        na = buffer1;
-    }
-    r = na;
-    delete[] nb.p;
-    delete[] q.p;																			// à enlever pour la fonction de Loris
-    lAdjust_realloc(r);																		// est ce qu'il faut mettre un & (voir page 10 fascicule)
-    return r;
+        
+        return r;
 }
 
 

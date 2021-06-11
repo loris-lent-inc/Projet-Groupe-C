@@ -18,22 +18,6 @@ typedef struct {
 
 
 /*
-R: Une fois un test_vector établi (res et expec_res définis) 
-   cette fonction affichera si le test est passé ou non.
-E: 1 test_vector
-S: Aucune
-*/
-void v_test(test_vector &T);
-
-/*
-R: Une fois un test_vector testé, cette fonction 
-   delete[] les pointeurs des lentiers du vecteur.
-E: 1 test_vector
-S: Aucune
-*/
-void delete_vector(test_vector &T);
-
-/*
 R: Affiche un lentier sous forme brute, case par case,
    de la moins significative à la plus significative.
 E: 1 lentier a, qui sera affiché.
