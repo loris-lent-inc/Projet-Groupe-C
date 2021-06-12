@@ -24,7 +24,7 @@ void lAdjust(lentier &a) {
 
     unsigned int i;
     i = a.size;
-    while (i > 0) {
+    while (i > 1) {
         if (*&a.p[i - 1] == 0) {
             a.size = a.size - 1;
             i = i - 1;
@@ -33,7 +33,7 @@ void lAdjust(lentier &a) {
             i = 0;
         }
     }
-    a.size = (a.size == 0) ? (1) : (a.size);
+    //a.size = (a.size == 0) ? (1) : (a.size);
 }
 
 
@@ -505,7 +505,7 @@ lentier div_eucl(lentier a, lentier b) {
             }
 
             // Partie 3 :
-            for (i = na.size - 1; i >= nb.size; --i) {
+            for (i = a.size - 1; i >= b.size; --i) {
                 // 3.a)
                 if (na.p[i] == nb.p[nb.size - 1]) {
                     q.p[i - nb.size] = BASE - 1;
