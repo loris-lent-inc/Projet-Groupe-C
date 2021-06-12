@@ -216,8 +216,6 @@ lentier B2BRightShift(lentier a, int amount, char modifySize) {
     unsigned int buffer, i;
     lentier result;
     buffer = 0;
-
-
     result.size = a.size;
     result.p = new unsigned int[result.size]();
 
