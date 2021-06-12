@@ -245,8 +245,9 @@ lentier B2BLeftShift(lentier a, int amount, char modifySize) {
     }
     if (modifySize == 1) {
         result.p[a.size] = buffer;
-        lAdjust_realloc(result);
     }
+        lAdjust_realloc(result);
+    
     return result;
 }
 
@@ -424,9 +425,10 @@ lentier div_eucl(lentier a, lentier b) {
     unsigned char lambda;
     const unsigned long long int BASE = 0x100000000;
     unsigned long long int templl;
+    lentier q, r, buffer1, buffer2, buffer3, buffer4, na, nb;
+    //q = quotient, r = reste
 
-    lentier q, r, buffer1, buffer2, buffer3, buffer4, na, nb; //q = quotient, r = reste
-
+    // Algorithme
     if (b.size == 1) {
         templl = 0;
         q.size = (a.size == 1) ? (1) : (a.size - 1);
@@ -444,13 +446,15 @@ lentier div_eucl(lentier a, lentier b) {
     else {
         q.size = (a.size == b.size) ? (1) : (a.size - b.size);
         q.p = new unsigned int[q.size]();
+        
+        // na.p = a.p
         na.size = a.size;
         na.p = new unsigned int[na.size];
         for (i = 0; i < a.size; i++) {
             *(na.p + i) = *(a.p + i);
         }
 
-        //na.p = a.p;
+        //nb.p = b.p;
         nb.size = b.size;
         nb.p = new unsigned int[nb.size];
         for (i = 0; i < b.size; i++) {
@@ -468,7 +472,7 @@ lentier div_eucl(lentier a, lentier b) {
             q.size = 1;
             delete q.p[];
             q.p = new unsigned int[1];
-            Non nécessaire, car nous retournons que le reste dans cette fonction
+            N'est nécessaire que si nous devons retourner le quotient
             */
 
         }
