@@ -214,11 +214,12 @@ lentier W2WLeftShift(lentier a, int amount) {
 
 lentier B2BRightShift(lentier a, int amount, char modifySize) {
     unsigned int buffer, i;
+    lentier result;
     buffer = 0;
 
-    lentier result;
+
     result.size = a.size;
-    result.p = new unsigned int[result.size];
+    result.p = new unsigned int[result.size]();
 
     for (i = a.size; i > 0; i--) {
         result.p[i - 1] = (a.p[i - 1] >> amount) + buffer;
