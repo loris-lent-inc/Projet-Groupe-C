@@ -517,7 +517,7 @@ lentier div_eucl(lentier a, lentier b) {
                     q.p[i - nb.size] = ((unsigned int)(templl / nb.p[nb.size - 1]));
                 }
 
-                // 3.b)
+                // 3.b) 
                 buffer1.p = new unsigned int[3];
                 buffer1.size = 3;
                 buffer1.p[2] = na.p[i];
@@ -590,11 +590,11 @@ lentier div_eucl(lentier a, lentier b) {
             na = buffer1;
         }
         r = na;
-        delete r.p;
         delete[] nb.p;
         delete[] q.p;																			// à enlever pour la fonction de Loris
         lAdjust_realloc(r);																		// est ce qu'il faut mettre un & (voir page 10 fascicule)
-    }
+        
+}
         
         return r;
 }
