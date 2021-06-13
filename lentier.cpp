@@ -33,7 +33,6 @@ void lAdjust(lentier &a) {
             i = 0;
         }
     }
-    //a.size = (a.size == 0) ? (1) : (a.size);
 }
 
 
@@ -603,13 +602,13 @@ lentier div_eucl(lentier a, lentier b) {
 quores div_eucl_QR(lentier a, lentier b) {
     unsigned int i;
     unsigned long long int temp = 0;
-    quores res;
+    quores res;                                                                                 // Initialisation du résultat
 
-    res.quotient.size = (a.size == 1) ? (1) : (a.size - 1);
+    res.quotient.size = (a.size == 1) ? (1) : (a.size - 1);                                     // On évite une taille nulle
     res.quotient.p = new unsigned int[res.quotient.size];
 
     for (i = a.size; i > 0; i--) {
-        temp = (temp << 32) + a.p[i - 1];
+        temp = (temp << 32) + a.p[i - 1];                                                       // On utilise temp et pas res.reste car il faut 64 bits
         res.quotient.p[i - 1] = (unsigned int)(temp / b.p[0]);
         temp = temp % b.p[0];
     }
@@ -620,22 +619,22 @@ quores div_eucl_QR(lentier a, lentier b) {
 
 
 unsigned long long int lentier_log2(lentier a) {
-    return (unsigned long long int)(a.p[a.size - 1] != 0) ? ((a.size - 1) * 32 + ceil(log2(a.p[a.size - 1]))) : ((a.size - 1) * 32);
+    return (a.p[a.size - 1] != 0) ? ((unsigned long long int)((a.size - 1) << 4) + ceil(log2(a.p[a.size - 1]))) : ((unsigned long long int)((a.size - 1) << 4));
 }
 
 
-char* lentier2dec(lentier L) {
+char* lentier2dec(lentier nombre_base_r) {
     char* b10 = nullptr;
     
-    if (L.size == 1 && L.p[0] == 0) {
+    if (nombre_base_r.size == 1 && nombre_base_r.p[0] == 0) {
         b10 = (char*)"0";
     }
     else {
-        unsigned int length, n;
+        unsigned int n;
+        unsigned long long int length;
         n = 9;                                                                                  // Puissance de 10 pour optimisation : 10^9
-        length = (lentier_log2(L) >> 1) / n;                                                    // La longueur en base 2, divisée par 2 est approx. longueur en base 10 divisé par n car on divise par 10^n, donc n fois moins que si on divisait par 10
-        length = (length == 0) ? (1) : (length);
-
+        length = (lentier_log2(nombre_base_r) >> 1) / n;                                        // La longueur en base 2, divisée par 2 est approx. longueur en base 10 divisé par n car on divise par 10^n, donc n fois moins que si on divisait par 10
+        length = (length == 0) ? (1) : (length);                                                // On évite que length soit 0
         quores res_div;                                                                         // On crée un type composé qui contiendra le quotient et le reste de la division
         res_div.quotient = L;                                                                   // Initialisé avec lentier passé en paramètre
 
@@ -665,12 +664,12 @@ char* lentier2dec(lentier L) {
 
         delete[] res_div.quotient.p;
         delete[] l_10n.p;                                                                       // on delete les pointeurs internes MAIS PAS b10, pointeur de retour, à delete[] après appel.
-        b10 = Clean_after_your_dog(length * n, b10);
+        b10 = sAdjust(length * n, b10);
     }
     return b10;
 }
 
-char* Clean_after_your_dog(unsigned int l, char *b)
+char* sAdjust(unsigned int l, char *b)
 {    
     char k = b[0];
     unsigned int i = 0;

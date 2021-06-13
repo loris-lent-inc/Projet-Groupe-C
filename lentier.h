@@ -27,13 +27,19 @@ void Affiche_lentier(lentier a);
 
 
 /*
+R: Change le paramètre "size" d'un lentier contenant des zéros dans les chiffres plus significants.
+E: 1 adresse vers un lentier dont il faut changer la taille
+S: Aucune
 */
-void lAdjust(lentier &a);
+void lAdjust(lentier& a);
 
 
 /*
+R: Change le paramètre "size" d'un lentier contenant des zéros dans les chiffres plus significants et le place dans un nouvel espace mémoire de taille adaptée.
+E: 1 adresse vers un lentier dont il faut changer la taille.
+S: Aucune
 */
-void lAdjust_realloc(lentier &a);
+void lAdjust_realloc(lentier& a);
 
 
 /*
@@ -81,7 +87,7 @@ lentier W2WLeftShift(lentier a, int amount);
 
 
 /*
-R: décalage bit à bit à droite de amount d'un lentier a , 
+R: décalage bit à bit à droite de amount d'un lentier a ,
 si modifySize = 1, alors la taille du lentier va être adaptée à la taille pratique.
 E: 1 lentier a, int amount, char modifySize (1 ou 0, automatiquement à zero)
 S: lentier
@@ -90,7 +96,7 @@ lentier B2BRightShift(lentier a, int amount, char modifySize);
 
 
 /*
-R: décalage bit à bit à gauche de amount d'un lentier a , 
+R: décalage bit à bit à gauche de amount d'un lentier a ,
 si modifySize = 1, alors la taille du lentier va être augmentée
 pour éviter la perte de donnée par débordement.
 E: 1 lentier a, int amount, char modifySize (1 ou 0, automatiquement à zero)
@@ -98,7 +104,11 @@ S: lentier
   */
 lentier B2BLeftShift(lentier a, int amount, char modifySize);
 
-
+/*
+R: Ajoute des zéros au début d'un lentier pour la soustraction
+E: 1 lentier à rallonger
+S: 1 lentier allongé
+*/
 lentier Allonge_lentier(lentier x, unsigned int size);
 
 
@@ -126,7 +136,7 @@ lentier init_lentier(unsigned int a);
 
 
 /*
-R: Convertit un entier sous forme de chaine de 
+R: Convertit un entier sous forme de chaine de
    caractères en un lentier en base r.
 E: 1 chaîne de caractères, nombre_dec.
 S: 1 lentier, resultat de la conversion.
@@ -171,4 +181,4 @@ R : Supprime les valeurs inutiles dans une chaine de caractère
 E : 1 unsigned int, dernière valeur utile de la chaine, 1 pointeur vers la chaine de caractères à nettoyer
 S : Chaine de caractères nettoyée
 */
-char* Clean_after_your_dog(unsigned int l, char *b);
+char* sAdjust(unsigned int l, char* b);
