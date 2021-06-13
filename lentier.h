@@ -161,14 +161,6 @@ quores div_eucl_QR(lentier a, lentier b);
 
 
 /*
-R: clacule et renvoie la longueur en terme de bits d'un lentier.
-E: 1 lentier
-S: 1 unsigned int, la taille de lentier
-*/
-unsigned long long int lentier_log2(lentier a);
-
-
-/*
 R: créer un pointeur vers un tableau de char représentant l'entrée en base 10
 E: 1 lentier
 S: 1 pointeur vers un tableau de char

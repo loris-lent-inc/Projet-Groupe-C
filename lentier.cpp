@@ -12,11 +12,11 @@ void Affiche_lentier(lentier a) {
     i = 0;
 
     cout << "{";
-    while (i < a.size) {
+    while (i < a.size - 1) {
         cout << a.p[i] << ", ";
-        i++;
+        i = i + 1;
     }
-    cout << "}" << endl;
+    cout << a.p[i] << "}" << endl;
 }
 
 
@@ -451,7 +451,7 @@ lentier div_eucl(lentier a, lentier b) {
         for (i = 0; i < a.size; i++) {
             *(na.p + i) = *(a.p + i);
         }
-
+        
         //nb.p = b.p;
         nb.size = b.size;
         nb.p = new unsigned int[nb.size];
@@ -590,6 +590,7 @@ lentier div_eucl(lentier a, lentier b) {
             na = buffer1;
         }
         r = na;
+        delete r.p;
         delete[] nb.p;
         delete[] q.p;																			// à enlever pour la fonction de Loris
         lAdjust_realloc(r);																		// est ce qu'il faut mettre un & (voir page 10 fascicule)
@@ -604,7 +605,7 @@ quores div_eucl_QR(lentier a, lentier b) {
     unsigned long long int temp = 0;
     quores res;                                                                                 // Initialisation du résultat
 
-    res.quotient.size = (a.size == 1) ? (1) : (a.size - 1);                                     // On évite une taille nulle
+    res.quotient.size = a.size;                                                                 // On évite une taille nulle
     res.quotient.p = new unsigned int[res.quotient.size];
 
     for (i = a.size; i > 0; i--) {
@@ -612,20 +613,15 @@ quores div_eucl_QR(lentier a, lentier b) {
         res.quotient.p[i - 1] = (unsigned int)(temp / b.p[0]);
         temp = temp % b.p[0];
     }
+    lAdjust(res.quotient);
     res.reste = (unsigned int)temp;
 
     return res;
 }
 
 
-unsigned long long int lentier_log2(lentier a) {
-    return (a.p[a.size - 1] != 0) ? ((unsigned long long int)((a.size - 1) << 4) + ceil(log2(a.p[a.size - 1]))) : ((unsigned long long int)((a.size - 1) << 4));
-}
-
-
 char* lentier2dec(lentier nombre_base_r) {
     char* b10 = nullptr;
-    
     if (nombre_base_r.size == 1 && nombre_base_r.p[0] == 0) {
         b10 = (char*)"0";
     }
@@ -633,20 +629,19 @@ char* lentier2dec(lentier nombre_base_r) {
         unsigned int n;
         unsigned long long int length;
         n = 9;                                                                                  // Puissance de 10 pour optimisation : 10^9
-        length = (lentier_log2(nombre_base_r) >> 1) / n;                                        // La longueur en base 2, divisée par 2 est approx. longueur en base 10 divisé par n car on divise par 10^n, donc n fois moins que si on divisait par 10
-        length = (length == 0) ? (1) : (length);                                                // On évite que length soit 0
+        length = nombre_base_r.size + 2;
         quores res_div;                                                                         // On crée un type composé qui contiendra le quotient et le reste de la division
         res_div.quotient = nombre_base_r;                                                                   // Initialisé avec lentier passé en paramètre
 
         lentier l_10n = init_lentier(pow(10, n));                                               // lentier contenant 10^n pour les divisions
 
-       b10 = new char[length * n + 1];                                                          // pointeur vers tableau qui stockera chiffre par chiffre lentier converti en base 10 (ce qu'on retourne)
+        b10 = new char[length * n + 1];                                                          // pointeur vers tableau qui stockera chiffre par chiffre lentier converti en base 10 (ce qu'on retourne)
 
         uint8_t j = n;
-
+        
         for (unsigned int i = length; i > 0; i--) {                                             // en faisant une division par 10^n, le reste aura n chiffres, donc on fait une sous-boucle avec des divisions sur des int (et pas sur des lentier => plus rapide) pour récupérer ces n chiffres 1 par 1, puis on fait le quotient par 10^n et on recommence à partir de ce quotient
             res_div = div_eucl_QR(res_div.quotient, l_10n);                                                 // on met quotient+reste par 10^n dans le type compo
-
+            
             if ((res_div.quotient.size - 1) || res_div.quotient.p[0] || res_div.reste) {                    // Tant que le reste ou le quotien sont non nuls (au moins un des deux), on continue la boucle :
                 j = n;
                 while (j) {                                                                                 // sous-boucle : reste dans [0 ; 10^n - 1] donc on le re partage en ses n chiffres [0 ; 9] :
