@@ -636,7 +636,7 @@ char* lentier2dec(lentier nombre_base_r) {
         length = (lentier_log2(nombre_base_r) >> 1) / n;                                        // La longueur en base 2, divisée par 2 est approx. longueur en base 10 divisé par n car on divise par 10^n, donc n fois moins que si on divisait par 10
         length = (length == 0) ? (1) : (length);                                                // On évite que length soit 0
         quores res_div;                                                                         // On crée un type composé qui contiendra le quotient et le reste de la division
-        res_div.quotient = L;                                                                   // Initialisé avec lentier passé en paramètre
+        res_div.quotient = nombre_base_r;                                                                   // Initialisé avec lentier passé en paramètre
 
         lentier l_10n = init_lentier(pow(10, n));                                               // lentier contenant 10^n pour les divisions
 
