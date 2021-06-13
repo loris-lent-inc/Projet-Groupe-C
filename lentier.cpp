@@ -626,8 +626,7 @@ char* lentier2dec(lentier nombre_base_r) {
         b10 = (char*)"0";
     }
     else {
-        unsigned int n;
-        unsigned long long int length;
+        unsigned int n, length;
         n = 9;                                                                                  // Puissance de 10 pour optimisation : 10^9
         length = nombre_base_r.size + 2;
         quores res_div;                                                                         // On crée un type composé qui contiendra le quotient et le reste de la division
