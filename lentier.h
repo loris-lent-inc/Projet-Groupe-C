@@ -136,8 +136,8 @@ lentier init_lentier(unsigned int a);
 
 
 /*
-R: Convertit un entier sous forme de chaine de
-   caractères en un lentier en base r.
+R: Convertir une chaine de caractères représentant un entier en base 10, en une structure mémoire correspondant à un lentier. 
+   Ce qui équivaut à convertir un entier de la base 10 vers un entier en base r=2^32.
 E: 1 chaîne de caractères, nombre_dec.
 S: 1 lentier, resultat de la conversion.
 */
