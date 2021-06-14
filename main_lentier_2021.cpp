@@ -24,7 +24,7 @@ char*  stringtochare(string s)
 
 
 int main()
-{	
+{
   char menu;
   unsigned int choix;
   lentier a,b,N,res;
@@ -128,7 +128,7 @@ int main()
 	  res=sub_lentier(a,b);
 	  str=lentier2dec(res);
 	  cout<<"a-b="<<str<<endl;
-	  //delete[] str;
+	  delete[] str;
 	  delete[] a.p;
 	  delete[] b.p;
 	  delete[] res.p;
@@ -194,7 +194,7 @@ int main()
 	      delete[] res.p;
 	    }
 	  cout<<"a mod b="<<str<<endl;
-	  //delete[] str;
+	  delete[] str;
 	  delete[] a.p;
 	  delete[] b.p;
 	  break;
