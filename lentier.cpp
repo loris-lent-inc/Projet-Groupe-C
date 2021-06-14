@@ -429,11 +429,11 @@ lentier div_eucl(lentier a, lentier b) {
     // Algorithme
     if (b.size == 1) {
         templl = 0;
-        q.size = (a.size == 1) ? (1) : (a.size - 1);
+        q.size = (a.size == 1) ? (1) : (a.size - 1);                     //q.size ne peut pas être égale a zero
         q.p = new unsigned int[q.size];
 
         for (i = a.size; i > 0; i--) {
-            templl = (templl << 32) + a.p[i - 1];
+            templl = (templl << 32) + a.p[i - 1];                        //On fait la division euclidien mot par mot, le reste sera ajouter au mot suivant (d'où le long long int) et ainsi de suite jusqu'au reste final
             q.p[i - 1] = (unsigned int)(templl / b.p[0]);
             templl = templl % b.p[0];
         }
@@ -445,7 +445,7 @@ lentier div_eucl(lentier a, lentier b) {
         q.size = (a.size == b.size) ? (1) : (a.size - b.size);
         q.p = new unsigned int[q.size]();
         
-        // na.p = a.p
+        // na.p = a.p; on fait des copie dans des nouveaux espaces mémoire car nous allons travailler sirectement sur na et nb, sans modifier a et b
         na.size = a.size;
         na.p = new unsigned int[na.size];
         for (i = 0; i < a.size; i++) {
@@ -461,10 +461,10 @@ lentier div_eucl(lentier a, lentier b) {
 
         /*
         Partie 1 :
-        Pas besoin de le faire, les bits de q ont été initialisé à 0 lors de sa déclaration avec les parenthèses 	après les [] (voir page 2 fascicule de projet)
+        Pas besoin de le faire, les bits de q ont été initialisé à 0 lors de sa déclaration avec les parenthèses après les [] (voir page 2 fascicule de projet)
         */
         if (cmp_lentier(na, nb) == -1) {
-            //il est demandé que A et B aient le même nombre de mots mais il n'est pas dit que A doit être supérieur à B
+            //il est demandé que A et B aient au moins le même nombre de mots mais il n'est pas dit que A doit être supérieur à B
 
             /*
             q.size = 1;
@@ -475,16 +475,16 @@ lentier div_eucl(lentier a, lentier b) {
 
         }
         else {//Algo donné
-         //Optimisation lambda
+         //Optimisation "lambda" On multiplie na et nb par 2 tant que le mot de poids fort de nb <= base/2
             lambda = 0;
             while (nb.p[nb.size - 1] < BASE / 2) {
 
                 buffer1 = B2BLeftShift(na, 1, 1);
-                delete[] na.p;
+                delete[] na.p;        //On libère l'espace
                 na = buffer1;
 
                 buffer1 = B2BLeftShift(nb, 1, 1);
-                delete[] nb.p;
+                delete[] nb.p;        //On libère l'espace
                 nb = buffer1;
 
                 ++lambda;
@@ -495,14 +495,15 @@ lentier div_eucl(lentier a, lentier b) {
             if (na.size > nb.size) {
                 // ici le Buffer1 correspond à B multiplié par la base à la puissance n-t (équivalent à a.size - b.size)
                 buffer1 = W2WLeftShift(nb, na.size - nb.size);
+                //Multiplier par la base revient à décaler d'un mot à gauche, et pas la base puissance x, de x mots à gauche
             }
             else {
                 buffer1 = nb;
             }
-            while (cmp_lentier(na, buffer1) >= 0) {
+            while (cmp_lentier(na, buffer1) >= 0) { //Tans que na >= nb, on ajoute 1 au quotient et on soustrait nb à na
                 q.p[na.size - nb.size] = q.p[na.size - nb.size] + 1;
                 buffer2 = sub_lentier(na, buffer1);
-                delete[] na.p;
+                delete[] na.p;        //On libère l'espace
                 na = buffer2;
             }
 
@@ -517,7 +518,9 @@ lentier div_eucl(lentier a, lentier b) {
                     q.p[i - nb.size] = ((unsigned int)(templl / nb.p[nb.size - 1]));
                 }
 
-                // 3.b) 
+                // 3.b)
+
+                //Création des 3 buffers nécéssaires
                 buffer1.p = new unsigned int[3];
                 buffer1.size = 3;
                 buffer1.p[2] = na.p[i];
@@ -533,9 +536,9 @@ lentier div_eucl(lentier a, lentier b) {
                 buffer3.size = 1;
                 buffer3.p[0] = q.p[i - nb.size];
                 
+                //Ajustement des tailles pour optimiser les multiplications
                 lAdjust_realloc(buffer1);
                 lAdjust_realloc(buffer2);
-                lAdjust_realloc(buffer3);
 
                 buffer4 = mult_classique(buffer2, buffer3);
 
@@ -546,7 +549,7 @@ lentier div_eucl(lentier a, lentier b) {
                     delete[] buffer4.p;
                     buffer4 = mult_classique(buffer2, buffer3);
                 }
-                delete[] buffer1.p;
+                delete[] buffer1.p;     //On libère l'espace
                 delete[] buffer2.p;
                 delete[] buffer3.p;
                 delete[] buffer4.p;
@@ -555,46 +558,46 @@ lentier div_eucl(lentier a, lentier b) {
                 buffer1.p = new unsigned int[1];
                 buffer1.size = 1;
                 buffer1.p[0] = q.p[i - nb.size];
-                buffer2 = W2WLeftShift(buffer1, i - nb.size);
-                delete[] buffer1.p;
-                buffer1 = mult_classique(buffer2, nb);
-                delete[] buffer2.p;
+                buffer2 = W2WLeftShift(buffer1, i - nb.size);    //Q[i-t]*base^(i-t)
+                delete[] buffer1.p;        //On libère l'espace
 
-                if (cmp_lentier(na, buffer1) == -1) {
-                    q.p[i - nb.size] = q.p[i - nb.size] - 1;
+                buffer1 = mult_classique(buffer2, nb);            //B*Q[i-t]*base^(i-t)
+                delete[] buffer2.p;        //On libère l'espace
 
-                    delete[] buffer1.p;
+                if (cmp_lentier(na, buffer1) == -1) {            //Si A < buffer1, alors la soustraction A - B*Q[i-t]*base^(i-t) donnera un resultat négatif, or nous travaillions avec des entiers non-signés, il faut donc d'abbord s'assurer que A >= buffer1 pour pouvoir éffectuer l'opération
+                    q.p[i - nb.size] = q.p[i - nb.size] - 1; //On soustrait 1 a Q[i-t] puis on refait les mêmes étapes
+
+                    delete[] buffer1.p;    //On libère l'espace
+
                     buffer1.p = new unsigned int[1];
                     buffer1.size = 1;
                     buffer1.p[0] = q.p[i - nb.size];
                     buffer2 = W2WLeftShift(buffer1, i - nb.size);
-                    delete[] buffer1.p;
+                    delete[] buffer1.p;    //On libère l'espace
+
                     buffer1 = mult_classique(buffer2, nb);
-                    delete[] buffer2.p;
-                    buffer2 = sub_lentier(na, buffer1);
-                    delete[] na.p;
-                    delete[] buffer1.p;
-                    na = buffer2;
+                    delete[] buffer2.p;    //On libère l'espace
                 }
-                else {
-                    buffer2 = sub_lentier(na, buffer1);
-                    delete[] na.p;
-                    delete[] buffer1.p;
-                    na = buffer2;
-                }
+                //Puis on effectue la soustraction
+                buffer2 = sub_lentier(na, buffer1);
+                delete[] na.p;        //On libère l'espace
+                delete[] buffer1.p;    //On libère l'espace
+                na = buffer2;
+                
             }
         }
+        //Maintenant il faut diviser le reste par lamda (si l'optimisation à eu lieu)
         if (lambda > 0) {
             buffer1 = B2BRightShift(na, (int)lambda, 1);
-            delete[] na.p;
+            delete[] na.p;        //On libère l'espace
             na = buffer1;
         }
-        r = na;
-        delete[] nb.p;
-        delete[] q.p;																			// à enlever pour la fonction de Loris
-        lAdjust_realloc(r);																		// est ce qu'il faut mettre un & (voir page 10 fascicule)
+        r = na;                 //R prend la valeur restante de na
+        delete[] nb.p;            //On libère l'espace
+        delete[] q.p;
+        lAdjust_realloc(r);        //On ajuste la taille de r avant de la retourner
         
-}
+    }
         
         return r;
 }
