@@ -469,7 +469,7 @@ lentier div_eucl(lentier a, lentier b) {
             /*
             q.size = 1;
             delete q.p[];
-            q.p = new unsigned int[1];
+            q.p = new unsigned int[1]();
             N'est nécessaire que si nous devons retourner le quotient
             */
 
